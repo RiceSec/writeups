@@ -1,0 +1,1 @@
+Use the "Generate RSA Message" option twice to generate two tuples $(n_1, e, c_1)$ and $(n_2, e, c_2)$. Here, $c_1 = m^e \mod n_1$ and $c_2 = m^e \mod n_2$. We can use the Chinese Remainder Theorem to find the value of $m^e$ and then take the fifth root to find $m$.
