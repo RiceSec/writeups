@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>RiceSec</title>
 
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
 	<link rel="stylesheet" href="/writeups/css/style.css" />
 </head>
 
@@ -19,19 +20,7 @@
 
 <h1>a-sheep-jumps-over-fence</h1>
 
-<pre><code class="language-py">x = 0x56455a7059574e7459584a685a576c756557646f59565637633364765a57647664474e305a48427965584e4464476c6c62584e6c6257463165574e3059574e7a5647687a6247567a5a6d527a636d46796233427366513d3d
-bs = x.to_bytes((x.bit_length() + 7) // 8, 'big')
-dec = b64decode(bs)
-
-flag = ''
-i = 0
-for _ in range(len(dec)):
-    flag += dec[i]
-    i = (i + 16) % (len(dec) - 1)
-
-# replace the final `T` with a `}`
-print(flag)
-</code></pre>
+<pre class="language-py"><code class="language-py">x <span class="token operator">=</span> <span class="token number">0x56455a7059574e7459584a685a576c756557646f59565637633364765a57647664474e305a48427965584e4464476c6c62584e6c6257463165574e3059574e7a5647687a6247567a5a6d527a636d46796233427366513d3d</span><br>bs <span class="token operator">=</span> x<span class="token punctuation">.</span>to_bytes<span class="token punctuation">(</span><span class="token punctuation">(</span>x<span class="token punctuation">.</span>bit_length<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">7</span><span class="token punctuation">)</span> <span class="token operator">//</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token string">'big'</span><span class="token punctuation">)</span><br>dec <span class="token operator">=</span> b64decode<span class="token punctuation">(</span>bs<span class="token punctuation">)</span><br><br>flag <span class="token operator">=</span> <span class="token string">''</span><br>i <span class="token operator">=</span> <span class="token number">0</span><br><span class="token keyword">for</span> _ <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>dec<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span><br>    flag <span class="token operator">+=</span> dec<span class="token punctuation">[</span>i<span class="token punctuation">]</span><br>    i <span class="token operator">=</span> <span class="token punctuation">(</span>i <span class="token operator">+</span> <span class="token number">16</span><span class="token punctuation">)</span> <span class="token operator">%</span> <span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>dec<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><br><br><span class="token comment"># replace the final `T` with a `}`</span><br><span class="token keyword">print</span><span class="token punctuation">(</span>flag<span class="token punctuation">)</span></code></pre>
 
 
 

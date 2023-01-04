@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>RiceSec</title>
 
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
 	<link rel="stylesheet" href="/writeups/css/style.css" />
 </head>
 
@@ -19,70 +20,7 @@
 
 <h1>unmix-the-flag</h1>
 
-<pre><code class="language-py">import string
-
-upperFlag = string.ascii_uppercase[:26]
-lowerFlag = string.ascii_lowercase[:26]
-
-# ...
-
-def unmix(oneLetter,num):
-
-    if(oneLetter.isupper()):
-        word = ord(oneLetter)-MIN_CAPLETTER
-        shift = ord(num)-MIN_CAPLETTER
-        return upperFlag[(word - shift)%len(upperFlag)]
-    if(oneLetter.islower()):
-        word = ord(oneLetter)-MIN_LETTER
-        shift = ord(num)-MIN_LETTER
-        return lowerFlag[(word - shift)%len(upperFlag)]
-
-# print(unmix(mix('U', 'H'), 'H'))
-
-def unpuzzled(puzzled):
-    solveOne = ''
-    i = 0
-    while i &lt; len(puzzled):
-        if puzzled[i].isupper():
-            a, b, c = puzzled[i:i+3]
-            a_, b_, c_ = map(lambda x: ord(x) - MIN_CAPLETTER, [a, b, c])
-            a__, b__, c__ = map(lambda x: '{0:05b}'.format(x), [a_, b_, c_])
-            binary = a__ + b__ + c__
-            ord_letter = int(binary, 2)
-            letter = chr(ord_letter)
-            solveOne += letter
-
-            i += 3
-        elif puzzled[i].islower():
-            l, h = puzzled[i:i+2]
-            l_, h_ = map(lambda x: ord(x) - MIN_LETTER, [l, h])
-            l__, h__ = map(lambda x: '{0:01x}'.format(x), [l_, h_])
-            six = l__ + h__
-            ord_letter = int(six, 16)
-            letter = chr(ord_letter)
-            solveOne += letter
-
-            i += 2
-        else:
-            print('what the')
-
-    return solveOne
-
-# ...
-
-pz = 'ZBTZBHZBIZBSBSEzcawBSEzyzuawac'
-
-for c in lowerFlag:
-    unmixed = ''
-    for count, alpha in enumerate(pz):
-        unmixed += unmix(alpha, c)
-
-    try:
-        x = unpuzzled(unmixed)
-        print('yay?', x)
-    except:
-        pass
-</code></pre>
+<pre class="language-py"><code class="language-py"><span class="token keyword">import</span> string<br><br>upperFlag <span class="token operator">=</span> string<span class="token punctuation">.</span>ascii_uppercase<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">26</span><span class="token punctuation">]</span><br>lowerFlag <span class="token operator">=</span> string<span class="token punctuation">.</span>ascii_lowercase<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">26</span><span class="token punctuation">]</span><br><br><span class="token comment"># ...</span><br><br><span class="token keyword">def</span> <span class="token function">unmix</span><span class="token punctuation">(</span>oneLetter<span class="token punctuation">,</span>num<span class="token punctuation">)</span><span class="token punctuation">:</span><br><br>    <span class="token keyword">if</span><span class="token punctuation">(</span>oneLetter<span class="token punctuation">.</span>isupper<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span><br>        word <span class="token operator">=</span> <span class="token builtin">ord</span><span class="token punctuation">(</span>oneLetter<span class="token punctuation">)</span><span class="token operator">-</span>MIN_CAPLETTER<br>        shift <span class="token operator">=</span> <span class="token builtin">ord</span><span class="token punctuation">(</span>num<span class="token punctuation">)</span><span class="token operator">-</span>MIN_CAPLETTER<br>        <span class="token keyword">return</span> upperFlag<span class="token punctuation">[</span><span class="token punctuation">(</span>word <span class="token operator">-</span> shift<span class="token punctuation">)</span><span class="token operator">%</span><span class="token builtin">len</span><span class="token punctuation">(</span>upperFlag<span class="token punctuation">)</span><span class="token punctuation">]</span><br>    <span class="token keyword">if</span><span class="token punctuation">(</span>oneLetter<span class="token punctuation">.</span>islower<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span><br>        word <span class="token operator">=</span> <span class="token builtin">ord</span><span class="token punctuation">(</span>oneLetter<span class="token punctuation">)</span><span class="token operator">-</span>MIN_LETTER<br>        shift <span class="token operator">=</span> <span class="token builtin">ord</span><span class="token punctuation">(</span>num<span class="token punctuation">)</span><span class="token operator">-</span>MIN_LETTER<br>        <span class="token keyword">return</span> lowerFlag<span class="token punctuation">[</span><span class="token punctuation">(</span>word <span class="token operator">-</span> shift<span class="token punctuation">)</span><span class="token operator">%</span><span class="token builtin">len</span><span class="token punctuation">(</span>upperFlag<span class="token punctuation">)</span><span class="token punctuation">]</span><br><br><span class="token comment"># print(unmix(mix('U', 'H'), 'H'))</span><br><br><span class="token keyword">def</span> <span class="token function">unpuzzled</span><span class="token punctuation">(</span>puzzled<span class="token punctuation">)</span><span class="token punctuation">:</span><br>    solveOne <span class="token operator">=</span> <span class="token string">''</span><br>    i <span class="token operator">=</span> <span class="token number">0</span><br>    <span class="token keyword">while</span> i <span class="token operator">&lt;</span> <span class="token builtin">len</span><span class="token punctuation">(</span>puzzled<span class="token punctuation">)</span><span class="token punctuation">:</span><br>        <span class="token keyword">if</span> puzzled<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>isupper<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span><br>            a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c <span class="token operator">=</span> puzzled<span class="token punctuation">[</span>i<span class="token punctuation">:</span>i<span class="token operator">+</span><span class="token number">3</span><span class="token punctuation">]</span><br>            a_<span class="token punctuation">,</span> b_<span class="token punctuation">,</span> c_ <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">:</span> <span class="token builtin">ord</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span> <span class="token operator">-</span> MIN_CAPLETTER<span class="token punctuation">,</span> <span class="token punctuation">[</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">]</span><span class="token punctuation">)</span><br>            a__<span class="token punctuation">,</span> b__<span class="token punctuation">,</span> c__ <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">:</span> <span class="token string">'{0:05b}'</span><span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>a_<span class="token punctuation">,</span> b_<span class="token punctuation">,</span> c_<span class="token punctuation">]</span><span class="token punctuation">)</span><br>            binary <span class="token operator">=</span> a__ <span class="token operator">+</span> b__ <span class="token operator">+</span> c__<br>            ord_letter <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span>binary<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><br>            letter <span class="token operator">=</span> <span class="token builtin">chr</span><span class="token punctuation">(</span>ord_letter<span class="token punctuation">)</span><br>            solveOne <span class="token operator">+=</span> letter<br><br>            i <span class="token operator">+=</span> <span class="token number">3</span><br>        <span class="token keyword">elif</span> puzzled<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>islower<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span><br>            l<span class="token punctuation">,</span> h <span class="token operator">=</span> puzzled<span class="token punctuation">[</span>i<span class="token punctuation">:</span>i<span class="token operator">+</span><span class="token number">2</span><span class="token punctuation">]</span><br>            l_<span class="token punctuation">,</span> h_ <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">:</span> <span class="token builtin">ord</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span> <span class="token operator">-</span> MIN_LETTER<span class="token punctuation">,</span> <span class="token punctuation">[</span>l<span class="token punctuation">,</span> h<span class="token punctuation">]</span><span class="token punctuation">)</span><br>            l__<span class="token punctuation">,</span> h__ <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token keyword">lambda</span> x<span class="token punctuation">:</span> <span class="token string">'{0:01x}'</span><span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>l_<span class="token punctuation">,</span> h_<span class="token punctuation">]</span><span class="token punctuation">)</span><br>            six <span class="token operator">=</span> l__ <span class="token operator">+</span> h__<br>            ord_letter <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span>six<span class="token punctuation">,</span> <span class="token number">16</span><span class="token punctuation">)</span><br>            letter <span class="token operator">=</span> <span class="token builtin">chr</span><span class="token punctuation">(</span>ord_letter<span class="token punctuation">)</span><br>            solveOne <span class="token operator">+=</span> letter<br><br>            i <span class="token operator">+=</span> <span class="token number">2</span><br>        <span class="token keyword">else</span><span class="token punctuation">:</span><br>            <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'what the'</span><span class="token punctuation">)</span><br><br>    <span class="token keyword">return</span> solveOne<br><br><span class="token comment"># ...</span><br><br>pz <span class="token operator">=</span> <span class="token string">'ZBTZBHZBIZBSBSEzcawBSEzyzuawac'</span><br><br><span class="token keyword">for</span> c <span class="token keyword">in</span> lowerFlag<span class="token punctuation">:</span><br>    unmixed <span class="token operator">=</span> <span class="token string">''</span><br>    <span class="token keyword">for</span> count<span class="token punctuation">,</span> alpha <span class="token keyword">in</span> <span class="token builtin">enumerate</span><span class="token punctuation">(</span>pz<span class="token punctuation">)</span><span class="token punctuation">:</span><br>        unmixed <span class="token operator">+=</span> unmix<span class="token punctuation">(</span>alpha<span class="token punctuation">,</span> c<span class="token punctuation">)</span><br><br>    <span class="token keyword">try</span><span class="token punctuation">:</span><br>        x <span class="token operator">=</span> unpuzzled<span class="token punctuation">(</span>unmixed<span class="token punctuation">)</span><br>        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'yay?'</span><span class="token punctuation">,</span> x<span class="token punctuation">)</span><br>    <span class="token keyword">except</span><span class="token punctuation">:</span><br>        <span class="token keyword">pass</span></code></pre>
 
 
 

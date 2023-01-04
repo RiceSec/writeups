@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>RiceSec</title>
 
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
 	<link rel="stylesheet" href="/writeups/css/style.css" />
 </head>
 
@@ -19,22 +20,9 @@
 
 <h1>be-alert</h1>
 
-<pre><code class="language-html">&lt;!-- Something appears in /flag.html --&gt;
-</code></pre>
+<pre class="language-html"><code class="language-html"><span class="token comment">&lt;!-- Something appears in /flag.html --></span></code></pre>
 <p>On <code>/flag.html</code>:</p>
-<pre><code class="language-html">&lt;script&gt;
-	&lt;!--
-		let word = &quot;rg`jsh`clhm&quot;;
-		let password = &quot;&quot;;
-		function chall(word) {
-			for (let i=0; i&lt;word.length;i++) {
-				password += String.fromCharCode(word.charCodeAt(i) + 1);
-			}
-			return password
-		}
-	--&gt;
-&lt;/script&gt;
-</code></pre>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript"><br>	<span class="token operator">&lt;</span><span class="token operator">!</span><span class="token operator">--</span><br>		<span class="token keyword">let</span> word <span class="token operator">=</span> <span class="token string">"rg`jsh`clhm"</span><span class="token punctuation">;</span><br>		<span class="token keyword">let</span> password <span class="token operator">=</span> <span class="token string">""</span><span class="token punctuation">;</span><br>		<span class="token keyword">function</span> <span class="token function">chall</span><span class="token punctuation">(</span><span class="token parameter">word</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><br>			<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">&lt;</span>word<span class="token punctuation">.</span>length<span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><br>				password <span class="token operator">+=</span> String<span class="token punctuation">.</span><span class="token function">fromCharCode</span><span class="token punctuation">(</span>word<span class="token punctuation">.</span><span class="token function">charCodeAt</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>			<span class="token punctuation">}</span><br>			<span class="token keyword">return</span> password<br>		<span class="token punctuation">}</span><br>	<span class="token operator">--</span><span class="token operator">></span><br></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></code></pre>
 <p><code>chall(word)</code> gives <code>shaktiadmin</code>, and entering that into the password field pops up an alert with the flag.</p>
 
 

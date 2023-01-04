@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>RiceSec</title>
 
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
 	<link rel="stylesheet" href="/writeups/css/style.css" />
 </head>
 
@@ -19,28 +20,7 @@
 
 <h1>leisurely-math</h1>
 
-<pre><code class="language-py">from pwn import *
-r = remote('chals.tuctf.com', 30202)
-
-while True:
-    line = r.recvline()
-    print(line)
-
-    if b'(' in line or b')' in line or b'eval' in line or b'[' in line or b']' in line or b'{' in line:
-        continue
-
-    ans = eval(line)
-    print(ans)
-    r.sendline(str(ans))
-    print(r.recvline())
-
-print(r.recvline())
-print(r.recvline())
-print(r.recvline())
-print(r.recvline())
-print(r.recvline())
-print(r.recvline())
-</code></pre>
+<pre class="language-py"><code class="language-py"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span><br>r <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">'chals.tuctf.com'</span><span class="token punctuation">,</span> <span class="token number">30202</span><span class="token punctuation">)</span><br><br><span class="token keyword">while</span> <span class="token boolean">True</span><span class="token punctuation">:</span><br>    line <span class="token operator">=</span> r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><br>    <span class="token keyword">print</span><span class="token punctuation">(</span>line<span class="token punctuation">)</span><br><br>    <span class="token keyword">if</span> <span class="token string">b'('</span> <span class="token keyword">in</span> line <span class="token keyword">or</span> <span class="token string">b')'</span> <span class="token keyword">in</span> line <span class="token keyword">or</span> <span class="token string">b'eval'</span> <span class="token keyword">in</span> line <span class="token keyword">or</span> <span class="token string">b'['</span> <span class="token keyword">in</span> line <span class="token keyword">or</span> <span class="token string">b']'</span> <span class="token keyword">in</span> line <span class="token keyword">or</span> <span class="token string">b'{'</span> <span class="token keyword">in</span> line<span class="token punctuation">:</span><br>        <span class="token keyword">continue</span><br><br>    ans <span class="token operator">=</span> <span class="token builtin">eval</span><span class="token punctuation">(</span>line<span class="token punctuation">)</span><br>    <span class="token keyword">print</span><span class="token punctuation">(</span>ans<span class="token punctuation">)</span><br>    r<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token builtin">str</span><span class="token punctuation">(</span>ans<span class="token punctuation">)</span><span class="token punctuation">)</span><br>    <span class="token keyword">print</span><span class="token punctuation">(</span>r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><br><span class="token keyword">print</span><span class="token punctuation">(</span>r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><span class="token keyword">print</span><span class="token punctuation">(</span>r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><span class="token keyword">print</span><span class="token punctuation">(</span>r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><span class="token keyword">print</span><span class="token punctuation">(</span>r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><span class="token keyword">print</span><span class="token punctuation">(</span>r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><span class="token keyword">print</span><span class="token punctuation">(</span>r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
 
 
 

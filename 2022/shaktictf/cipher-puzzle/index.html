@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>RiceSec</title>
 
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
 	<link rel="stylesheet" href="/writeups/css/style.css" />
 </head>
 
@@ -23,9 +24,7 @@
 <pre><code>01110101011100100110100101100111011110100111011101110011011110100110100001111011001101010111001000110100011001110011011101110111010100110011000001110110010100010011000001010000001101010011001101111101
 </code></pre>
 <p>Converting to bytes:</p>
-<pre><code class="language-py">&gt;&gt;&gt; bytes.fromhex(hex(x)[2:])
-b'urigzwszh{5r4g7wS0vQ0P53}'
-</code></pre>
+<pre class="language-py"><code class="language-py"><span class="token operator">>></span><span class="token operator">></span> <span class="token builtin">bytes</span><span class="token punctuation">.</span>fromhex<span class="token punctuation">(</span><span class="token builtin">hex</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">)</span><br><span class="token string">b'urigzwszh{5r4g7wS0vQ0P53}'</span></code></pre>
 <p>I figured <code>urigzwszh</code> probably corresponds to <code>shaktictf</code>. Substituting the known characters in <code>5r4g7wS0vQ0P53</code> gives <code>5h4k7iC0vQ0P53</code>. Some guesswork then, gives <code>5h4k7iC0nM0R53</code>.</p>
 
 

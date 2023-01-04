@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>RiceSec</title>
 
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
 	<link rel="stylesheet" href="/writeups/css/style.css" />
 </head>
 
@@ -20,26 +21,9 @@
 <h1>broken-source</h1>
 
 <p>Download the wasm file and run <code>strings</code>.</p>
-<pre><code class="language-sh">strings my_project.wasm
-</code></pre>
+<pre class="language-sh"><code class="language-sh">strings my_project.wasm</code></pre>
 <p>Notice <code>.\new_project_for_ctf_v28095.cpp</code>. The file <code>/wasm/new_project_for_ctf_v28095.cpp</code> has the flag in plaintext:</p>
-<pre><code class="language-c">// ...
-
-__attribute__((noinline))
-EMSCRIPTEN_KEEPALIVE char* get_flag( )
-{
-    /* Wow, epic compiler bug! */
-    char flag[64] = &quot;TUCTF{my_c0mp1l3r_0p71m1z35_m3_0u7!}&quot;;
-
-   return flag;
-}
-
-int main()
-{
-    printf(&quot;Flag: %s\n&quot;, get_flag());
-    return 0;
-}
-</code></pre>
+<pre class="language-c"><code class="language-c"><span class="token comment">// ...</span><br><br><span class="token keyword">__attribute__</span><span class="token punctuation">(</span><span class="token punctuation">(</span>noinline<span class="token punctuation">)</span><span class="token punctuation">)</span><br>EMSCRIPTEN_KEEPALIVE <span class="token keyword">char</span><span class="token operator">*</span> <span class="token function">get_flag</span><span class="token punctuation">(</span> <span class="token punctuation">)</span><br><span class="token punctuation">{</span><br>    <span class="token comment">/* Wow, epic compiler bug! */</span><br>    <span class="token keyword">char</span> flag<span class="token punctuation">[</span><span class="token number">64</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">"TUCTF{my_c0mp1l3r_0p71m1z35_m3_0u7!}"</span><span class="token punctuation">;</span><br><br>   <span class="token keyword">return</span> flag<span class="token punctuation">;</span><br><span class="token punctuation">}</span><br><br><span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><br><span class="token punctuation">{</span><br>    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Flag: %s\n"</span><span class="token punctuation">,</span> <span class="token function">get_flag</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span><br><span class="token punctuation">}</span></code></pre>
 
 
 

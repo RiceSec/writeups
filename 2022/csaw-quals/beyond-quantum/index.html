@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>RiceSec</title>
 
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
 	<link rel="stylesheet" href="/writeups/css/style.css" />
 </head>
 
@@ -20,27 +21,11 @@
 <h1>beyond-quantum</h1>
 
 <p>The encryption function in <code>cipher.py</code> is flawed.</p>
-<pre><code class="language-py">    def encrypt(self, msg_poly, rand_poly):
-        return (((self.h_poly).trunc(self.q) + msg_poly) % self.R_poly).trunc(self.q)
-</code></pre>
+<pre class="language-py"><code class="language-py">    <span class="token keyword">def</span> <span class="token function">encrypt</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> msg_poly<span class="token punctuation">,</span> rand_poly<span class="token punctuation">)</span><span class="token punctuation">:</span><br>        <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>h_poly<span class="token punctuation">)</span><span class="token punctuation">.</span>trunc<span class="token punctuation">(</span>self<span class="token punctuation">.</span>q<span class="token punctuation">)</span> <span class="token operator">+</span> msg_poly<span class="token punctuation">)</span> <span class="token operator">%</span> self<span class="token punctuation">.</span>R_poly<span class="token punctuation">)</span><span class="token punctuation">.</span>trunc<span class="token punctuation">(</span>self<span class="token punctuation">.</span>q<span class="token punctuation">)</span></code></pre>
 <p>Notice that this implementation of <code>encrypt</code> doesn't even use <code>rand_poly</code>. In fact, it doesn't use any private parameters. It can be represented as:</p>
 <p>$$c(x) \equiv [h(x) + m(x)] \pmod{R(x)}$$</p>
 <p>Since $h(x)$ is just the public key, we can get the message by just subtracting $m(x)$ from the ciphertext polynomial $c(x)$.</p>
-<pre><code class="language-py">import numpy as np
-from sympy.abc import x
-from sympy import ZZ, Poly
-
-n = 97
-p = 3
-r = Poly(x ** n - 1, x).set_domain(ZZ)
-h = Poly(..., x, domain='ZZ') # output of `publickey_as_poly`
-c = Poly(..., x, domain='ZZ') # output of `ciphertext_as_poly`
-
-output = ((c - h) % r).trunc(p).all_coeffs()[::-1]
-output = np.packbits(np.array(output).astype(int)).tobytes().hex()
-output = bytes.fromhex(output)
-print(output)
-</code></pre>
+<pre class="language-py"><code class="language-py"><span class="token keyword">import</span> numpy <span class="token keyword">as</span> np<br><span class="token keyword">from</span> sympy<span class="token punctuation">.</span>abc <span class="token keyword">import</span> x<br><span class="token keyword">from</span> sympy <span class="token keyword">import</span> ZZ<span class="token punctuation">,</span> Poly<br><br>n <span class="token operator">=</span> <span class="token number">97</span><br>p <span class="token operator">=</span> <span class="token number">3</span><br>r <span class="token operator">=</span> Poly<span class="token punctuation">(</span>x <span class="token operator">**</span> n <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> x<span class="token punctuation">)</span><span class="token punctuation">.</span>set_domain<span class="token punctuation">(</span>ZZ<span class="token punctuation">)</span><br>h <span class="token operator">=</span> Poly<span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> x<span class="token punctuation">,</span> domain<span class="token operator">=</span><span class="token string">'ZZ'</span><span class="token punctuation">)</span> <span class="token comment"># output of `publickey_as_poly`</span><br>c <span class="token operator">=</span> Poly<span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> x<span class="token punctuation">,</span> domain<span class="token operator">=</span><span class="token string">'ZZ'</span><span class="token punctuation">)</span> <span class="token comment"># output of `ciphertext_as_poly`</span><br><br>output <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>c <span class="token operator">-</span> h<span class="token punctuation">)</span> <span class="token operator">%</span> r<span class="token punctuation">)</span><span class="token punctuation">.</span>trunc<span class="token punctuation">(</span>p<span class="token punctuation">)</span><span class="token punctuation">.</span>all_coeffs<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><br>output <span class="token operator">=</span> np<span class="token punctuation">.</span>packbits<span class="token punctuation">(</span>np<span class="token punctuation">.</span>array<span class="token punctuation">(</span>output<span class="token punctuation">)</span><span class="token punctuation">.</span>astype<span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>tobytes<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">hex</span><span class="token punctuation">(</span><span class="token punctuation">)</span><br>output <span class="token operator">=</span> <span class="token builtin">bytes</span><span class="token punctuation">.</span>fromhex<span class="token punctuation">(</span>output<span class="token punctuation">)</span><br><span class="token keyword">print</span><span class="token punctuation">(</span>output<span class="token punctuation">)</span></code></pre>
 <p>This gives <code>b'QuAnt3ntr0py'</code> and sending <code>solve_challenge QuAnt3ntr0py</code> to the server yields the flag.</p>
 
 

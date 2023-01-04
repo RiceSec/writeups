@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>RiceSec</title>
 
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
 	<link rel="stylesheet" href="/writeups/css/style.css" />
 </head>
 
@@ -20,20 +21,7 @@
 <h1>hyper-maze</h1>
 
 <p>Using node turned out to be overkill since I ended up using regex to find the pages.</p>
-<pre><code class="language-js">import got from 'got';
-
-let path = 'page_drawl99.html';
-
-while (true) {
-	console.log(path);
-
-	const res = await got(`https://hyper-maze.tuctf.com/pages/${path}`);
-	const {body} = res;
-	path = [...body.matchAll(/page_[^\.]+.html/g)]
-		.map(m =&gt; m[0])
-		.find(m =&gt; m !== path);
-}
-</code></pre>
+<pre class="language-js"><code class="language-js"><span class="token keyword">import</span> got <span class="token keyword">from</span> <span class="token string">'got'</span><span class="token punctuation">;</span><br><br><span class="token keyword">let</span> path <span class="token operator">=</span> <span class="token string">'page_drawl99.html'</span><span class="token punctuation">;</span><br><br><span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><br>	console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>path<span class="token punctuation">)</span><span class="token punctuation">;</span><br><br>	<span class="token keyword">const</span> res <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">got</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">https://hyper-maze.tuctf.com/pages/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>path<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>	<span class="token keyword">const</span> <span class="token punctuation">{</span>body<span class="token punctuation">}</span> <span class="token operator">=</span> res<span class="token punctuation">;</span><br>	path <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token operator">...</span>body<span class="token punctuation">.</span><span class="token function">matchAll</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">page_[^\.]+.html</span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">)</span><span class="token punctuation">]</span><br>		<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token parameter">m</span> <span class="token operator">=></span> m<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><br>		<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token parameter">m</span> <span class="token operator">=></span> m <span class="token operator">!==</span> path<span class="token punctuation">)</span><span class="token punctuation">;</span><br><span class="token punctuation">}</span></code></pre>
 
 
 

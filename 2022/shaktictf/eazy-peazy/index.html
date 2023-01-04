@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>RiceSec</title>
 
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
 	<link rel="stylesheet" href="/writeups/css/style.css" />
 </head>
 
@@ -19,13 +20,7 @@
 
 <h1>eazy-peazy</h1>
 
-<pre><code class="language-py">import base64
-s=''
-enc = base64.b64decode(b'ZFlSXGVaVGVXbFRjamFlIVAiZFBkZmEkY1BWUmtqampqampQWFQlJCNlYyYnWCVlYyYlbg==')
-for i in enc:
-    s+=chr(i+15)
-print(s)
-</code></pre>
+<pre class="language-py"><code class="language-py"><span class="token keyword">import</span> base64<br>s<span class="token operator">=</span><span class="token string">''</span><br>enc <span class="token operator">=</span> base64<span class="token punctuation">.</span>b64decode<span class="token punctuation">(</span><span class="token string">b'ZFlSXGVaVGVXbFRjamFlIVAiZFBkZmEkY1BWUmtqampqampQWFQlJCNlYyYnWCVlYyYlbg=='</span><span class="token punctuation">)</span><br><span class="token keyword">for</span> i <span class="token keyword">in</span> enc<span class="token punctuation">:</span><br>    s<span class="token operator">+=</span><span class="token builtin">chr</span><span class="token punctuation">(</span>i<span class="token operator">+</span><span class="token number">15</span><span class="token punctuation">)</span><br><span class="token keyword">print</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span></code></pre>
 
 
 

@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>RiceSec</title>
 
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
 	<link rel="stylesheet" href="/writeups/css/style.css" />
 </head>
 
@@ -20,22 +21,7 @@
 <h1>file-collapse</h1>
 
 <p>First, I found the AES key with <code>findaes</code>. Then I used the following script to try different initial values until one started with TUCTF.</p>
-<pre><code class="language-py">from Crypto.Cipher import AES
-
-aes_key = bytes.fromhex('30 26 ca b7 05 3a 7b b6 32 a7 9a 4e 38 a1 4c 36')
-with open('flag.txt', 'rb') as f:
-  ciphertext = f.read()[:16]
-
-with open('heap.mem', 'rb') as f:
-  mem = f.read()
-
-for addr in range(0, len(mem)):
-  iv = mem[addr2:addr2+16]
-  aes = AES.new( aes_key, AES.MODE_CBC, iv )
-  res = aes.decrypt( ciphertext )
-  if b'TUCTF' in res:
-    print(hex(addr2), res)
-</code></pre>
+<pre class="language-py"><code class="language-py"><span class="token keyword">from</span> Crypto<span class="token punctuation">.</span>Cipher <span class="token keyword">import</span> AES<br><br>aes_key <span class="token operator">=</span> <span class="token builtin">bytes</span><span class="token punctuation">.</span>fromhex<span class="token punctuation">(</span><span class="token string">'30 26 ca b7 05 3a 7b b6 32 a7 9a 4e 38 a1 4c 36'</span><span class="token punctuation">)</span><br><span class="token keyword">with</span> <span class="token builtin">open</span><span class="token punctuation">(</span><span class="token string">'flag.txt'</span><span class="token punctuation">,</span> <span class="token string">'rb'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> f<span class="token punctuation">:</span><br>  ciphertext <span class="token operator">=</span> f<span class="token punctuation">.</span>read<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">16</span><span class="token punctuation">]</span><br><br><span class="token keyword">with</span> <span class="token builtin">open</span><span class="token punctuation">(</span><span class="token string">'heap.mem'</span><span class="token punctuation">,</span> <span class="token string">'rb'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> f<span class="token punctuation">:</span><br>  mem <span class="token operator">=</span> f<span class="token punctuation">.</span>read<span class="token punctuation">(</span><span class="token punctuation">)</span><br><br><span class="token keyword">for</span> addr <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token builtin">len</span><span class="token punctuation">(</span>mem<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span><br>  iv <span class="token operator">=</span> mem<span class="token punctuation">[</span>addr2<span class="token punctuation">:</span>addr2<span class="token operator">+</span><span class="token number">16</span><span class="token punctuation">]</span><br>  aes <span class="token operator">=</span> AES<span class="token punctuation">.</span>new<span class="token punctuation">(</span> aes_key<span class="token punctuation">,</span> AES<span class="token punctuation">.</span>MODE_CBC<span class="token punctuation">,</span> iv <span class="token punctuation">)</span><br>  res <span class="token operator">=</span> aes<span class="token punctuation">.</span>decrypt<span class="token punctuation">(</span> ciphertext <span class="token punctuation">)</span><br>  <span class="token keyword">if</span> <span class="token string">b'TUCTF'</span> <span class="token keyword">in</span> res<span class="token punctuation">:</span><br>    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">hex</span><span class="token punctuation">(</span>addr2<span class="token punctuation">)</span><span class="token punctuation">,</span> res<span class="token punctuation">)</span></code></pre>
 
 
 

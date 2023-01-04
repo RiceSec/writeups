@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>RiceSec</title>
 
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
 	<link rel="stylesheet" href="/writeups/css/style.css" />
 </head>
 
@@ -26,8 +27,7 @@ DECIMAL       HEXADECIMAL     DESCRIPTION
 0             0x0             JPEG image data, JFIF standard 1.01
 71041         0x11581         7-zip archive data, version 0.4
 </code></pre>
-<pre><code class="language-sh">binwalk --dd='.*' --extract secret_kitteh_.jpg
-</code></pre>
+<pre class="language-sh"><code class="language-sh">binwalk <span class="token parameter variable">--dd</span><span class="token operator">=</span><span class="token string">'.*'</span> <span class="token parameter variable">--extract</span> secret_kitteh_.jpg</code></pre>
 <p>This results in <code>_secret_kitteh_.jpg.extracted/11581</code>, which is an encrypted 7z file. The password is just <code>password</code>.</p>
 
 

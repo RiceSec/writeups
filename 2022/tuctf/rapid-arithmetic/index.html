@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>RiceSec</title>
 
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
 	<link rel="stylesheet" href="/writeups/css/style.css" />
 </head>
 
@@ -19,110 +20,7 @@
 
 <h1>rapid-arithmetic</h1>
 
-<pre><code class="language-py">from pwn import *
-import re
-import time
-from t2n import text2num
-import roman
-from morse3 import Morse as mor
-
-ev = re.compile('^[0-9+\-*/\(\) ]+$')
-so = re.compile('^[a-z, -]+$')
-rn = '[IVXLCDM0]+'
-ro = re.compile('^[IVXLCDM0+\-*/\(\) ]+$')
-mo = re.compile('^[\.+\-*/\(\) ]+$')
-aa = re.compile('^[0-9 ]+$')
-plus_minus = re.compile('(?=plus)|(?=minus)|(?&lt;=plus)|(?&lt;=minus)')
-
-def pm(s):
-    if type(s) == int:
-        return s
-    if s.strip() == 'plus':
-        return '+'
-    if s.strip() == 'minus':
-        return '-'
-    return s
-
-def f(line):
-    line = list(
-        map(
-            lambda s: s if s.strip() in ['plus', 'minus'] else text2num(s.strip()),
-            re.split(plus_minus, line.replace(' and ', ' '))
-        )
-    )
-    line = list(map(lambda s: pm(s), line))
-    lllll = list(map(str, line))
-    reeeeeeee = ' '.join(lllll)
-    return eval(reeeeeeee)
-
-def roman_replace(r):
-    if r.group(0) == '0':
-        return str(0)
-    return str(roman.fromRoman(r.group(0)))
-
-def rep_replace(r):
-    return r.group(1)
-
-def g(line):
-    subres = re.sub(rn, roman_replace, line)
-    return eval(subres)
-
-def morse_replace(r):
-    if r.group(0) == '-':
-        return '-'
-    return mor(r.group(0)).morseToString()
-
-def h(line):
-    subres = re.sub('[\.-]+', morse_replace, line)
-    return round(eval(subres.replace(' ', '')))
-
-def i(line):
-    subres = re.sub(r'([0-9=+])\1+', rep_replace, line)
-    return round(eval(subres
-        .replace('=', '-')
-        .replace(' ', '')
-        .replace('00', '0')))
-
-
-r = remote('chals.tuctf.com', 30200)
-r.recvline()
-r.recvuntil(b'Answer: ')
-r.sendline('2500')
-
-while True:
-    line = ''
-    line = r.recvline(timeout=5).decode('utf-8').strip()
-
-    if re.fullmatch(aa, line):
-        r.recvline()
-        legit = r.recvline()
-        print('[]', legit)
-        r.recvline()
-        r.recvline()
-        ans = i(legit.decode('utf-8').strip())
-    elif re.fullmatch(ev, line):
-        ans = eval(line.replace('/', '//'))
-    elif re.fullmatch(so, line):
-        ans = f(line)
-    elif re.fullmatch(ro, line):
-        ans = g(line)
-    elif re.fullmatch(mo, line):
-        ans = h(line)
-    else:
-        continue
-
-    # print('problem:', line)
-    print('answer:', int(ans))
-    r.sendline((str(int(ans))).encode('utf-8'))
-    r.recvline()
-
-print(r.recvline())
-print(r.recvline())
-print(r.recvline())
-print(r.recvline())
-print(r.recvline())
-print(r.recvline())
-</code></pre>
+<pre class="language-py"><code class="language-py"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span><br><span class="token keyword">import</span> re<br><span class="token keyword">import</span> time<br><span class="token keyword">from</span> t2n <span class="token keyword">import</span> text2num<br><span class="token keyword">import</span> roman<br><span class="token keyword">from</span> morse3 <span class="token keyword">import</span> Morse <span class="token keyword">as</span> mor<br><br>ev <span class="token operator">=</span> re<span class="token punctuation">.</span><span class="token builtin">compile</span><span class="token punctuation">(</span><span class="token string">'^[0-9+\-*/\(\) ]+$'</span><span class="token punctuation">)</span><br>so <span class="token operator">=</span> re<span class="token punctuation">.</span><span class="token builtin">compile</span><span class="token punctuation">(</span><span class="token string">'^[a-z, -]+$'</span><span class="token punctuation">)</span><br>rn <span class="token operator">=</span> <span class="token string">'[IVXLCDM0]+'</span><br>ro <span class="token operator">=</span> re<span class="token punctuation">.</span><span class="token builtin">compile</span><span class="token punctuation">(</span><span class="token string">'^[IVXLCDM0+\-*/\(\) ]+$'</span><span class="token punctuation">)</span><br>mo <span class="token operator">=</span> re<span class="token punctuation">.</span><span class="token builtin">compile</span><span class="token punctuation">(</span><span class="token string">'^[\.+\-*/\(\) ]+$'</span><span class="token punctuation">)</span><br>aa <span class="token operator">=</span> re<span class="token punctuation">.</span><span class="token builtin">compile</span><span class="token punctuation">(</span><span class="token string">'^[0-9 ]+$'</span><span class="token punctuation">)</span><br>plus_minus <span class="token operator">=</span> re<span class="token punctuation">.</span><span class="token builtin">compile</span><span class="token punctuation">(</span><span class="token string">'(?=plus)|(?=minus)|(?&lt;=plus)|(?&lt;=minus)'</span><span class="token punctuation">)</span><br><br><span class="token keyword">def</span> <span class="token function">pm</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">:</span><br>    <span class="token keyword">if</span> <span class="token builtin">type</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token builtin">int</span><span class="token punctuation">:</span><br>        <span class="token keyword">return</span> s<br>    <span class="token keyword">if</span> s<span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token string">'plus'</span><span class="token punctuation">:</span><br>        <span class="token keyword">return</span> <span class="token string">'+'</span><br>    <span class="token keyword">if</span> s<span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token string">'minus'</span><span class="token punctuation">:</span><br>        <span class="token keyword">return</span> <span class="token string">'-'</span><br>    <span class="token keyword">return</span> s<br><br><span class="token keyword">def</span> <span class="token function">f</span><span class="token punctuation">(</span>line<span class="token punctuation">)</span><span class="token punctuation">:</span><br>    line <span class="token operator">=</span> <span class="token builtin">list</span><span class="token punctuation">(</span><br>        <span class="token builtin">map</span><span class="token punctuation">(</span><br>            <span class="token keyword">lambda</span> s<span class="token punctuation">:</span> s <span class="token keyword">if</span> s<span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">in</span> <span class="token punctuation">[</span><span class="token string">'plus'</span><span class="token punctuation">,</span> <span class="token string">'minus'</span><span class="token punctuation">]</span> <span class="token keyword">else</span> text2num<span class="token punctuation">(</span>s<span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span><br>            re<span class="token punctuation">.</span>split<span class="token punctuation">(</span>plus_minus<span class="token punctuation">,</span> line<span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">' and '</span><span class="token punctuation">,</span> <span class="token string">' '</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br>        <span class="token punctuation">)</span><br>    <span class="token punctuation">)</span><br>    line <span class="token operator">=</span> <span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token keyword">lambda</span> s<span class="token punctuation">:</span> pm<span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">,</span> line<span class="token punctuation">)</span><span class="token punctuation">)</span><br>    lllll <span class="token operator">=</span> <span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">str</span><span class="token punctuation">,</span> line<span class="token punctuation">)</span><span class="token punctuation">)</span><br>    reeeeeeee <span class="token operator">=</span> <span class="token string">' '</span><span class="token punctuation">.</span>join<span class="token punctuation">(</span>lllll<span class="token punctuation">)</span><br>    <span class="token keyword">return</span> <span class="token builtin">eval</span><span class="token punctuation">(</span>reeeeeeee<span class="token punctuation">)</span><br><br><span class="token keyword">def</span> <span class="token function">roman_replace</span><span class="token punctuation">(</span>r<span class="token punctuation">)</span><span class="token punctuation">:</span><br>    <span class="token keyword">if</span> r<span class="token punctuation">.</span>group<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token string">'0'</span><span class="token punctuation">:</span><br>        <span class="token keyword">return</span> <span class="token builtin">str</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><br>    <span class="token keyword">return</span> <span class="token builtin">str</span><span class="token punctuation">(</span>roman<span class="token punctuation">.</span>fromRoman<span class="token punctuation">(</span>r<span class="token punctuation">.</span>group<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><br><span class="token keyword">def</span> <span class="token function">rep_replace</span><span class="token punctuation">(</span>r<span class="token punctuation">)</span><span class="token punctuation">:</span><br>    <span class="token keyword">return</span> r<span class="token punctuation">.</span>group<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><br><br><span class="token keyword">def</span> <span class="token function">g</span><span class="token punctuation">(</span>line<span class="token punctuation">)</span><span class="token punctuation">:</span><br>    subres <span class="token operator">=</span> re<span class="token punctuation">.</span>sub<span class="token punctuation">(</span>rn<span class="token punctuation">,</span> roman_replace<span class="token punctuation">,</span> line<span class="token punctuation">)</span><br>    <span class="token keyword">return</span> <span class="token builtin">eval</span><span class="token punctuation">(</span>subres<span class="token punctuation">)</span><br><br><span class="token keyword">def</span> <span class="token function">morse_replace</span><span class="token punctuation">(</span>r<span class="token punctuation">)</span><span class="token punctuation">:</span><br>    <span class="token keyword">if</span> r<span class="token punctuation">.</span>group<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token string">'-'</span><span class="token punctuation">:</span><br>        <span class="token keyword">return</span> <span class="token string">'-'</span><br>    <span class="token keyword">return</span> mor<span class="token punctuation">(</span>r<span class="token punctuation">.</span>group<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>morseToString<span class="token punctuation">(</span><span class="token punctuation">)</span><br><br><span class="token keyword">def</span> <span class="token function">h</span><span class="token punctuation">(</span>line<span class="token punctuation">)</span><span class="token punctuation">:</span><br>    subres <span class="token operator">=</span> re<span class="token punctuation">.</span>sub<span class="token punctuation">(</span><span class="token string">'[\.-]+'</span><span class="token punctuation">,</span> morse_replace<span class="token punctuation">,</span> line<span class="token punctuation">)</span><br>    <span class="token keyword">return</span> <span class="token builtin">round</span><span class="token punctuation">(</span><span class="token builtin">eval</span><span class="token punctuation">(</span>subres<span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><br><span class="token keyword">def</span> <span class="token function">i</span><span class="token punctuation">(</span>line<span class="token punctuation">)</span><span class="token punctuation">:</span><br>    subres <span class="token operator">=</span> re<span class="token punctuation">.</span>sub<span class="token punctuation">(</span><span class="token string">r'([0-9=+])\1+'</span><span class="token punctuation">,</span> rep_replace<span class="token punctuation">,</span> line<span class="token punctuation">)</span><br>    <span class="token keyword">return</span> <span class="token builtin">round</span><span class="token punctuation">(</span><span class="token builtin">eval</span><span class="token punctuation">(</span>subres<br>        <span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">'='</span><span class="token punctuation">,</span> <span class="token string">'-'</span><span class="token punctuation">)</span><br>        <span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">)</span><br>        <span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">'00'</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><br><br>r <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">'chals.tuctf.com'</span><span class="token punctuation">,</span> <span class="token number">30200</span><span class="token punctuation">)</span><br>r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><br>r<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">b'Answer: '</span><span class="token punctuation">)</span><br>r<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">'2500'</span><span class="token punctuation">)</span><br><br><span class="token keyword">while</span> <span class="token boolean">True</span><span class="token punctuation">:</span><br>    line <span class="token operator">=</span> <span class="token string">''</span><br>    line <span class="token operator">=</span> r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span>timeout<span class="token operator">=</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">.</span>decode<span class="token punctuation">(</span><span class="token string">'utf-8'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span><br><br>    <span class="token keyword">if</span> re<span class="token punctuation">.</span>fullmatch<span class="token punctuation">(</span>aa<span class="token punctuation">,</span> line<span class="token punctuation">)</span><span class="token punctuation">:</span><br>        r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><br>        legit <span class="token operator">=</span> r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><br>        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'[]'</span><span class="token punctuation">,</span> legit<span class="token punctuation">)</span><br>        r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><br>        r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><br>        ans <span class="token operator">=</span> i<span class="token punctuation">(</span>legit<span class="token punctuation">.</span>decode<span class="token punctuation">(</span><span class="token string">'utf-8'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br>    <span class="token keyword">elif</span> re<span class="token punctuation">.</span>fullmatch<span class="token punctuation">(</span>ev<span class="token punctuation">,</span> line<span class="token punctuation">)</span><span class="token punctuation">:</span><br>        ans <span class="token operator">=</span> <span class="token builtin">eval</span><span class="token punctuation">(</span>line<span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">,</span> <span class="token string">'//'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br>    <span class="token keyword">elif</span> re<span class="token punctuation">.</span>fullmatch<span class="token punctuation">(</span>so<span class="token punctuation">,</span> line<span class="token punctuation">)</span><span class="token punctuation">:</span><br>        ans <span class="token operator">=</span> f<span class="token punctuation">(</span>line<span class="token punctuation">)</span><br>    <span class="token keyword">elif</span> re<span class="token punctuation">.</span>fullmatch<span class="token punctuation">(</span>ro<span class="token punctuation">,</span> line<span class="token punctuation">)</span><span class="token punctuation">:</span><br>        ans <span class="token operator">=</span> g<span class="token punctuation">(</span>line<span class="token punctuation">)</span><br>    <span class="token keyword">elif</span> re<span class="token punctuation">.</span>fullmatch<span class="token punctuation">(</span>mo<span class="token punctuation">,</span> line<span class="token punctuation">)</span><span class="token punctuation">:</span><br>        ans <span class="token operator">=</span> h<span class="token punctuation">(</span>line<span class="token punctuation">)</span><br>    <span class="token keyword">else</span><span class="token punctuation">:</span><br>        <span class="token keyword">continue</span><br><br>    <span class="token comment"># print('problem:', line)</span><br>    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'answer:'</span><span class="token punctuation">,</span> <span class="token builtin">int</span><span class="token punctuation">(</span>ans<span class="token punctuation">)</span><span class="token punctuation">)</span><br>    r<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token builtin">str</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">(</span>ans<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>encode<span class="token punctuation">(</span><span class="token string">'utf-8'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br>    r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><br><br><span class="token keyword">print</span><span class="token punctuation">(</span>r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><span class="token keyword">print</span><span class="token punctuation">(</span>r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><span class="token keyword">print</span><span class="token punctuation">(</span>r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><span class="token keyword">print</span><span class="token punctuation">(</span>r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><span class="token keyword">print</span><span class="token punctuation">(</span>r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><span class="token keyword">print</span><span class="token punctuation">(</span>r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
 
 
 

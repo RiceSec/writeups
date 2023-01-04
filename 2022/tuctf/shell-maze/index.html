@@ -5,6 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>RiceSec</title>
 
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
 	<link rel="stylesheet" href="/writeups/css/style.css" />
 </head>
 
@@ -19,145 +20,7 @@
 
 <h1>shell-maze</h1>
 
-<pre><code class="language-py">from pwn import *
-from collections import defaultdict
-import time
-
-CURR = 'X'
-EMPTY = 'O'
-WALL = '#'
-
-def graphify(grid):
-	m, n = len(grid), len(grid[0])
-
-	graph = defaultdict(set)
-	for r, row in enumerate(grid):
-		for c, cell in enumerate(row):
-			for dr, dc in [(0, -1), (0, 1), (1, 0)]:
-				if 0 &lt;= r + dr &lt; m and 0 &lt;= c + dc &lt; n:
-					if grid[r + dr][c + dc] == EMPTY:
-						graph[(r, c)].add((r + dr, c + dc))
-						# graph[(r + dr, c + dc)].add((r, c))
-
-	return graph
-
-
-def bfs(graph, node):
-	q = [node]
-	d = defaultdict(lambda: float('inf'))
-
-	d[node] = 0
-	visited = { node: True }
-	anc = { node: node }
-
-	while q:
-		curr = q.pop()
-		# if curr == (m - 1, n - 1):
-		# 	break
-
-		visited[curr] = True
-		for nbr in graph[curr]:
-			d[nbr] = min(d[nbr], d[curr] + 1)
-			if nbr not in visited:
-				anc[nbr] = curr
-				q.append(nbr)
-
-	return anc
-
-def traceback(anc, start, goal=(10, 19)):
-	curr = goal
-	directions = []
-	while curr != start:
-		new = anc[curr]
-		if curr[0] &gt; new[0]:
-			directions.append('V')
-		elif curr[1] &gt; new[1]:
-			directions.append('&gt;')
-		elif curr[1] &lt; new[1]:
-			directions.append('&lt;')
-		else:
-			print('wtf')
-			break
-
-		curr = new
-	return directions[::-1]
-
-rem = remote('chals.tuctf.com', 30204)
-
-rem.recvline()
-rem.recvline()
-rem.recvline()
-
-j = 0
-while True:
-	lines = []
-
-	grid = rem.recvuntil(b'Move: ')
-	grid = grid.replace(b'Move: ', b'').strip()
-	grid = grid.split(b'\n')
-	print(grid)
-	grid = list(map(lambda b: b.decode('utf-8'), grid))
-	print(j, grid)
-	graph = graphify(grid)
-	start = None
-	b_most_r_most = (0, 0)
-	for r, row in enumerate(grid):
-		for c, cell in enumerate(row):
-			if cell == CURR:
-				start = (r, c)
-			if cell in [CURR, EMPTY]:
-				b_most_r_most = (r, c)
-
-	print('start, goal', start, b_most_r_most)
-	ancs = bfs(graph, start)
-	dirs = traceback(ancs, start, b_most_r_most)
-
-	if len(dirs) == 0:
-		rem.sendline()
-
-	for i, direction in enumerate(dirs):
-		rem.sendline(direction.encode('utf-8'))
-		if i &lt; len(dirs) - 1:
-			try:
-				buf = b''
-				while (l := rem.recvline())[0] in [b'X', b'O', b'#']:
-					buf += l
-				# print(buf)
-			except:
-				print('ugh')
-				print(rem.recvall())
-				print(rem.recvline())
-				print(rem.recvline())
-				print(rem.recvline())
-				print(rem.recvline())
-				break
-		else:
-			try:
-				buf = b''
-				while not (l := rem.recvline()) != b'':
-					buf += l
-				rem.recvuntil(b'next level...\n\n').decode('utf-8')
-			except:
-				print('aaaaaaaaaa')
-				print(rem.recvline())
-				print(rem.recvline())
-				print(rem.recvline())
-				print(rem.recvline())
-				print(rem.recvall())
-				break
-
-	print('bingo')
-	j += 1
-	if j == 50:
-		break
-
-print('done')
-print(rem.recvline())
-print(rem.recvline())
-print(rem.recvline())
-print(rem.recvline())
-print(rem.recvall())
-</code></pre>
+<pre class="language-py"><code class="language-py"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span><br><span class="token keyword">from</span> collections <span class="token keyword">import</span> defaultdict<br><span class="token keyword">import</span> time<br><br>CURR <span class="token operator">=</span> <span class="token string">'X'</span><br>EMPTY <span class="token operator">=</span> <span class="token string">'O'</span><br>WALL <span class="token operator">=</span> <span class="token string">'#'</span><br><br><span class="token keyword">def</span> <span class="token function">graphify</span><span class="token punctuation">(</span>grid<span class="token punctuation">)</span><span class="token punctuation">:</span><br>	m<span class="token punctuation">,</span> n <span class="token operator">=</span> <span class="token builtin">len</span><span class="token punctuation">(</span>grid<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token builtin">len</span><span class="token punctuation">(</span>grid<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><br><br>	graph <span class="token operator">=</span> defaultdict<span class="token punctuation">(</span><span class="token builtin">set</span><span class="token punctuation">)</span><br>	<span class="token keyword">for</span> r<span class="token punctuation">,</span> row <span class="token keyword">in</span> <span class="token builtin">enumerate</span><span class="token punctuation">(</span>grid<span class="token punctuation">)</span><span class="token punctuation">:</span><br>		<span class="token keyword">for</span> c<span class="token punctuation">,</span> cell <span class="token keyword">in</span> <span class="token builtin">enumerate</span><span class="token punctuation">(</span>row<span class="token punctuation">)</span><span class="token punctuation">:</span><br>			<span class="token keyword">for</span> dr<span class="token punctuation">,</span> dc <span class="token keyword">in</span> <span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">:</span><br>				<span class="token keyword">if</span> <span class="token number">0</span> <span class="token operator">&lt;=</span> r <span class="token operator">+</span> dr <span class="token operator">&lt;</span> m <span class="token keyword">and</span> <span class="token number">0</span> <span class="token operator">&lt;=</span> c <span class="token operator">+</span> dc <span class="token operator">&lt;</span> n<span class="token punctuation">:</span><br>					<span class="token keyword">if</span> grid<span class="token punctuation">[</span>r <span class="token operator">+</span> dr<span class="token punctuation">]</span><span class="token punctuation">[</span>c <span class="token operator">+</span> dc<span class="token punctuation">]</span> <span class="token operator">==</span> EMPTY<span class="token punctuation">:</span><br>						graph<span class="token punctuation">[</span><span class="token punctuation">(</span>r<span class="token punctuation">,</span> c<span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">.</span>add<span class="token punctuation">(</span><span class="token punctuation">(</span>r <span class="token operator">+</span> dr<span class="token punctuation">,</span> c <span class="token operator">+</span> dc<span class="token punctuation">)</span><span class="token punctuation">)</span><br>						<span class="token comment"># graph[(r + dr, c + dc)].add((r, c))</span><br><br>	<span class="token keyword">return</span> graph<br><br><br><span class="token keyword">def</span> <span class="token function">bfs</span><span class="token punctuation">(</span>graph<span class="token punctuation">,</span> node<span class="token punctuation">)</span><span class="token punctuation">:</span><br>	q <span class="token operator">=</span> <span class="token punctuation">[</span>node<span class="token punctuation">]</span><br>	d <span class="token operator">=</span> defaultdict<span class="token punctuation">(</span><span class="token keyword">lambda</span><span class="token punctuation">:</span> <span class="token builtin">float</span><span class="token punctuation">(</span><span class="token string">'inf'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><br>	d<span class="token punctuation">[</span>node<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span><br>	visited <span class="token operator">=</span> <span class="token punctuation">{</span> node<span class="token punctuation">:</span> <span class="token boolean">True</span> <span class="token punctuation">}</span><br>	anc <span class="token operator">=</span> <span class="token punctuation">{</span> node<span class="token punctuation">:</span> node <span class="token punctuation">}</span><br><br>	<span class="token keyword">while</span> q<span class="token punctuation">:</span><br>		curr <span class="token operator">=</span> q<span class="token punctuation">.</span>pop<span class="token punctuation">(</span><span class="token punctuation">)</span><br>		<span class="token comment"># if curr == (m - 1, n - 1):</span><br>		<span class="token comment"># 	break</span><br><br>		visited<span class="token punctuation">[</span>curr<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">True</span><br>		<span class="token keyword">for</span> nbr <span class="token keyword">in</span> graph<span class="token punctuation">[</span>curr<span class="token punctuation">]</span><span class="token punctuation">:</span><br>			d<span class="token punctuation">[</span>nbr<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token builtin">min</span><span class="token punctuation">(</span>d<span class="token punctuation">[</span>nbr<span class="token punctuation">]</span><span class="token punctuation">,</span> d<span class="token punctuation">[</span>curr<span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><br>			<span class="token keyword">if</span> nbr <span class="token keyword">not</span> <span class="token keyword">in</span> visited<span class="token punctuation">:</span><br>				anc<span class="token punctuation">[</span>nbr<span class="token punctuation">]</span> <span class="token operator">=</span> curr<br>				q<span class="token punctuation">.</span>append<span class="token punctuation">(</span>nbr<span class="token punctuation">)</span><br><br>	<span class="token keyword">return</span> anc<br><br><span class="token keyword">def</span> <span class="token function">traceback</span><span class="token punctuation">(</span>anc<span class="token punctuation">,</span> start<span class="token punctuation">,</span> goal<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">19</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span><br>	curr <span class="token operator">=</span> goal<br>	directions <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><br>	<span class="token keyword">while</span> curr <span class="token operator">!=</span> start<span class="token punctuation">:</span><br>		new <span class="token operator">=</span> anc<span class="token punctuation">[</span>curr<span class="token punctuation">]</span><br>		<span class="token keyword">if</span> curr<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">></span> new<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">:</span><br>			directions<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token string">'V'</span><span class="token punctuation">)</span><br>		<span class="token keyword">elif</span> curr<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">></span> new<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">:</span><br>			directions<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token string">'>'</span><span class="token punctuation">)</span><br>		<span class="token keyword">elif</span> curr<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">&lt;</span> new<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">:</span><br>			directions<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token string">'&lt;'</span><span class="token punctuation">)</span><br>		<span class="token keyword">else</span><span class="token punctuation">:</span><br>			<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'wtf'</span><span class="token punctuation">)</span><br>			<span class="token keyword">break</span><br><br>		curr <span class="token operator">=</span> new<br>	<span class="token keyword">return</span> directions<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><br><br>rem <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">'chals.tuctf.com'</span><span class="token punctuation">,</span> <span class="token number">30204</span><span class="token punctuation">)</span><br><br>rem<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><br>rem<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><br>rem<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><br><br>j <span class="token operator">=</span> <span class="token number">0</span><br><span class="token keyword">while</span> <span class="token boolean">True</span><span class="token punctuation">:</span><br>	lines <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><br><br>	grid <span class="token operator">=</span> rem<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">b'Move: '</span><span class="token punctuation">)</span><br>	grid <span class="token operator">=</span> grid<span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">b'Move: '</span><span class="token punctuation">,</span> <span class="token string">b''</span><span class="token punctuation">)</span><span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span><br>	grid <span class="token operator">=</span> grid<span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">b'\n'</span><span class="token punctuation">)</span><br>	<span class="token keyword">print</span><span class="token punctuation">(</span>grid<span class="token punctuation">)</span><br>	grid <span class="token operator">=</span> <span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">(</span><span class="token keyword">lambda</span> b<span class="token punctuation">:</span> b<span class="token punctuation">.</span>decode<span class="token punctuation">(</span><span class="token string">'utf-8'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> grid<span class="token punctuation">)</span><span class="token punctuation">)</span><br>	<span class="token keyword">print</span><span class="token punctuation">(</span>j<span class="token punctuation">,</span> grid<span class="token punctuation">)</span><br>	graph <span class="token operator">=</span> graphify<span class="token punctuation">(</span>grid<span class="token punctuation">)</span><br>	start <span class="token operator">=</span> <span class="token boolean">None</span><br>	b_most_r_most <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><br>	<span class="token keyword">for</span> r<span class="token punctuation">,</span> row <span class="token keyword">in</span> <span class="token builtin">enumerate</span><span class="token punctuation">(</span>grid<span class="token punctuation">)</span><span class="token punctuation">:</span><br>		<span class="token keyword">for</span> c<span class="token punctuation">,</span> cell <span class="token keyword">in</span> <span class="token builtin">enumerate</span><span class="token punctuation">(</span>row<span class="token punctuation">)</span><span class="token punctuation">:</span><br>			<span class="token keyword">if</span> cell <span class="token operator">==</span> CURR<span class="token punctuation">:</span><br>				start <span class="token operator">=</span> <span class="token punctuation">(</span>r<span class="token punctuation">,</span> c<span class="token punctuation">)</span><br>			<span class="token keyword">if</span> cell <span class="token keyword">in</span> <span class="token punctuation">[</span>CURR<span class="token punctuation">,</span> EMPTY<span class="token punctuation">]</span><span class="token punctuation">:</span><br>				b_most_r_most <span class="token operator">=</span> <span class="token punctuation">(</span>r<span class="token punctuation">,</span> c<span class="token punctuation">)</span><br><br>	<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'start, goal'</span><span class="token punctuation">,</span> start<span class="token punctuation">,</span> b_most_r_most<span class="token punctuation">)</span><br>	ancs <span class="token operator">=</span> bfs<span class="token punctuation">(</span>graph<span class="token punctuation">,</span> start<span class="token punctuation">)</span><br>	dirs <span class="token operator">=</span> traceback<span class="token punctuation">(</span>ancs<span class="token punctuation">,</span> start<span class="token punctuation">,</span> b_most_r_most<span class="token punctuation">)</span><br><br>	<span class="token keyword">if</span> <span class="token builtin">len</span><span class="token punctuation">(</span>dirs<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span><br>		rem<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token punctuation">)</span><br><br>	<span class="token keyword">for</span> i<span class="token punctuation">,</span> direction <span class="token keyword">in</span> <span class="token builtin">enumerate</span><span class="token punctuation">(</span>dirs<span class="token punctuation">)</span><span class="token punctuation">:</span><br>		rem<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>direction<span class="token punctuation">.</span>encode<span class="token punctuation">(</span><span class="token string">'utf-8'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br>		<span class="token keyword">if</span> i <span class="token operator">&lt;</span> <span class="token builtin">len</span><span class="token punctuation">(</span>dirs<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">:</span><br>			<span class="token keyword">try</span><span class="token punctuation">:</span><br>				buf <span class="token operator">=</span> <span class="token string">b''</span><br>				<span class="token keyword">while</span> <span class="token punctuation">(</span>l <span class="token operator">:=</span> rem<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token keyword">in</span> <span class="token punctuation">[</span><span class="token string">b'X'</span><span class="token punctuation">,</span> <span class="token string">b'O'</span><span class="token punctuation">,</span> <span class="token string">b'#'</span><span class="token punctuation">]</span><span class="token punctuation">:</span><br>					buf <span class="token operator">+=</span> l<br>				<span class="token comment"># print(buf)</span><br>			<span class="token keyword">except</span><span class="token punctuation">:</span><br>				<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'ugh'</span><span class="token punctuation">)</span><br>				<span class="token keyword">print</span><span class="token punctuation">(</span>rem<span class="token punctuation">.</span>recvall<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br>				<span class="token keyword">print</span><span class="token punctuation">(</span>rem<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br>				<span class="token keyword">print</span><span class="token punctuation">(</span>rem<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br>				<span class="token keyword">print</span><span class="token punctuation">(</span>rem<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br>				<span class="token keyword">print</span><span class="token punctuation">(</span>rem<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br>				<span class="token keyword">break</span><br>		<span class="token keyword">else</span><span class="token punctuation">:</span><br>			<span class="token keyword">try</span><span class="token punctuation">:</span><br>				buf <span class="token operator">=</span> <span class="token string">b''</span><br>				<span class="token keyword">while</span> <span class="token keyword">not</span> <span class="token punctuation">(</span>l <span class="token operator">:=</span> rem<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token string">b''</span><span class="token punctuation">:</span><br>					buf <span class="token operator">+=</span> l<br>				rem<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">b'next level...\n\n'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>decode<span class="token punctuation">(</span><span class="token string">'utf-8'</span><span class="token punctuation">)</span><br>			<span class="token keyword">except</span><span class="token punctuation">:</span><br>				<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'aaaaaaaaaa'</span><span class="token punctuation">)</span><br>				<span class="token keyword">print</span><span class="token punctuation">(</span>rem<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br>				<span class="token keyword">print</span><span class="token punctuation">(</span>rem<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br>				<span class="token keyword">print</span><span class="token punctuation">(</span>rem<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br>				<span class="token keyword">print</span><span class="token punctuation">(</span>rem<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br>				<span class="token keyword">print</span><span class="token punctuation">(</span>rem<span class="token punctuation">.</span>recvall<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br>				<span class="token keyword">break</span><br><br>	<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'bingo'</span><span class="token punctuation">)</span><br>	j <span class="token operator">+=</span> <span class="token number">1</span><br>	<span class="token keyword">if</span> j <span class="token operator">==</span> <span class="token number">50</span><span class="token punctuation">:</span><br>		<span class="token keyword">break</span><br><br><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'done'</span><span class="token punctuation">)</span><br><span class="token keyword">print</span><span class="token punctuation">(</span>rem<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><span class="token keyword">print</span><span class="token punctuation">(</span>rem<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><span class="token keyword">print</span><span class="token punctuation">(</span>rem<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><span class="token keyword">print</span><span class="token punctuation">(</span>rem<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><span class="token keyword">print</span><span class="token punctuation">(</span>rem<span class="token punctuation">.</span>recvall<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
 
 
 
