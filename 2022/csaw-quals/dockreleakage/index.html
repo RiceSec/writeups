@@ -1,0 +1,27 @@
+<pre><code>$ docker load &lt; dockREleakage.tar.gz
+$ docker run -it dockre-chal
+</code></pre>
+<pre><code>/chal # ls
+flag.txt
+/chal # cat flag.txt
+73c73d_w17h1n_7h3_d0ck3rf1l3}
+Find the rest of the flag by yourself!
+</code></pre>
+<p>Snipped for brevity:</p>
+<pre><code>$ docker history --no-trunc dockre-chal
+CREATED BY
+/bin/sh -c #(nop)  CMD [&quot;/bin/sh&quot;]
+/bin/sh -c echo &quot;Find the rest of the flag by yourself!&quot; &gt;&gt; flag.txt
+/bin/sh -c cat p-flag.txt &gt; tmp.txt; rm -rf flag.txt p-flag.txt; mv tmp.txt flag.txt; echo &quot;&quot; &gt;&gt; flag.txt
+/bin/sh -c echo &quot;ZmxhZ3tuM3Yzcl9sMzR2M181M241MTcxdjNfMW5mMHJtNDcxMG5fdW5wcjA=&quot; &gt; /dev/null
+/bin/sh -c #(nop) COPY file:... in p-flag.txt    29
+/bin/sh -c #(nop) WORKDIR /chal
+/bin/sh -c #(nop)  CMD [&quot;/bin/sh&quot;]
+/bin/sh -c #(nop) ADD file:... in /              5.54M
+
+$ echo 'ZmxhZ3tuM3Yzcl9sMzR2M181M241MTcxdjNfMW5mMHJtNDcxMG5fdW5wcjA=' | base64 -d
+flag{n3v3r_l34v3_53n5171v3_1nf0rm4710n_unpr0
+</code></pre>
+<p>Combining the two parts, the flag is</p>
+<pre><code>flag{n3v3r_l34v3_53n5171v3_1nf0rm4710n_unpr073c73d_w17h1n_7h3_d0ck3rf1l3}
+</code></pre>

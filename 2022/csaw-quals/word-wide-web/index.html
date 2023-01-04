@@ -1,0 +1,26 @@
+<p>This challenge has a chain of links. Every page has one valid link among several broken ones (without <code>href</code> attributes). We can write a script to traverse through the chain.</p>
+<p>Additionally, the pages require that you include a cookie that describes the path along the solution until that page, lest, else it just says &quot;Booooo!&quot;.</p>
+<pre><code class="language-js">import jsdom from 'jsdom';
+import got from 'got';
+
+const HOST = '';
+const PORT = '';
+
+let path = '/';
+let solChain = '';
+
+while (true) {
+	console.log(path);
+	const res = await got(`http://${HOST}:${PORT}${path}`, {
+		headers: {
+			'Cookie': `solChain=${solChain}`,
+		}
+	});
+	const {body} = res;
+	const {document} = (new jsdom.JSDOM(body)).window;
+	const link = document.querySelector('a[href]');
+	path = link.href;
+	solChain += `${path.substring(1)}%20`;
+}
+</code></pre>
+<p>The script errors out when <code>link</code> is <code>null</code>, at which point we can just manually check the last-link for the flag.</p>

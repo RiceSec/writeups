@@ -1,0 +1,17 @@
+<pre><code class="language-html">&lt;!-- Something appears in /flag.html --&gt;
+</code></pre>
+<p>On <code>/flag.html</code>:</p>
+<pre><code class="language-html">&lt;script&gt;
+	&lt;!--
+		let word = &quot;rg`jsh`clhm&quot;;
+		let password = &quot;&quot;;
+		function chall(word) {
+			for (let i=0; i&lt;word.length;i++) {
+				password += String.fromCharCode(word.charCodeAt(i) + 1);
+			}
+			return password
+		}
+	--&gt;
+&lt;/script&gt;
+</code></pre>
+<p><code>chall(word)</code> gives <code>shaktiadmin</code>, and entering that into the password field pops up an alert with the flag.</p>

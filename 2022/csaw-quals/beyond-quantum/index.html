@@ -1,0 +1,23 @@
+<p>The encryption function in <code>cipher.py</code> is flawed.</p>
+<pre><code class="language-py">    def encrypt(self, msg_poly, rand_poly):
+        return (((self.h_poly).trunc(self.q) + msg_poly) % self.R_poly).trunc(self.q)
+</code></pre>
+<p>Notice that this implementation of <code>encrypt</code> doesn't even use <code>rand_poly</code>. In fact, it doesn't use any private parameters. It can be represented as:</p>
+<p>$$c(x) \equiv [h(x) + m(x)] \pmod{R(x)}$$</p>
+<p>Since $h(x)$ is just the public key, we can get the message by just subtracting $m(x)$ from the ciphertext polynomial $c(x)$.</p>
+<pre><code class="language-py">import numpy as np
+from sympy.abc import x
+from sympy import ZZ, Poly
+
+n = 97
+p = 3
+r = Poly(x ** n - 1, x).set_domain(ZZ)
+h = Poly(..., x, domain='ZZ') # output of `publickey_as_poly`
+c = Poly(..., x, domain='ZZ') # output of `ciphertext_as_poly`
+
+output = ((c - h) % r).trunc(p).all_coeffs()[::-1]
+output = np.packbits(np.array(output).astype(int)).tobytes().hex()
+output = bytes.fromhex(output)
+print(output)
+</code></pre>
+<p>This gives <code>b'QuAnt3ntr0py'</code> and sending <code>solve_challenge QuAnt3ntr0py</code> to the server yields the flag.</p>

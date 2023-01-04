@@ -1,0 +1,10 @@
+<p>GDB time.</p>
+<p>Set a breakpoint at the point where the input is compared to the passkey.</p>
+<pre><code>b *main+562
+</code></pre>
+<p>Run and enter arbitrary strings at the prompt:</p>
+<pre><code>r
+</code></pre>
+<p>When the breakpoint is hit:</p>
+<pre><code>x/s $rsi
+</code></pre>

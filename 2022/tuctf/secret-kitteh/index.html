@@ -1,0 +1,10 @@
+<pre><code>binwalk secret_kitteh_.jpg
+
+DECIMAL       HEXADECIMAL     DESCRIPTION
+--------------------------------------------------------------------------------
+0             0x0             JPEG image data, JFIF standard 1.01
+71041         0x11581         7-zip archive data, version 0.4
+</code></pre>
+<pre><code class="language-sh">binwalk --dd='.*' --extract secret_kitteh_.jpg
+</code></pre>
+<p>This results in <code>_secret_kitteh_.jpg.extracted/11581</code>, which is an encrypted 7z file. The password is just <code>password</code>.</p>

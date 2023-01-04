@@ -1,0 +1,56 @@
+<p>The creation time of <code>flag.txt</code> in the challenge zip file was <code>1669826638</code>.</p>
+<pre><code class="language-rs">use rand::rngs::StdRng;
+use rand::{Rng, SeedableRng};
+use std::time::SystemTime;
+
+fn randseed(ts: u64) -&gt; StdRng {
+    return StdRng::seed_from_u64(ts);
+}
+fn change(st: String) -&gt; String {
+    let mut arr: Vec&lt;char&gt; = st.chars().collect();
+    let mut i = 0;
+    while i &lt;= arr.len() - 1 {
+        let v1 = char::from_u32(arr[i] as u32 - 0x3);
+        arr[i] = v1.unwrap();
+        i = i + 1;
+    }
+    let s: String = arr.into_iter().collect();
+    return s;
+}
+fn rand_xor(input: Vec&lt;u8&gt;, ts: u64) -&gt; String {
+    let mut rd = randseed(ts);
+    return input
+        .into_iter()
+        .map(|c| format!(&quot;{:02x}&quot;, (c as u8 ^ rd.gen::&lt;u8&gt;())))
+        .collect::&lt;Vec&lt;String&gt;&gt;()
+        .join(&quot;&quot;);
+}
+
+fn main() -&gt; std::io::Result&lt;()&gt; {
+    let mut flag = String::new();
+    std::io::stdin().read_line(&amp;mut flag).unwrap();
+    let flag_bytes = hex::decode(flag).unwrap();
+
+    let mut obf = String::new();
+    for ts in (1669826638 - 3600)..(1669826638 + 3600) {
+        let xored = rand_xor(flag_bytes.clone(), ts);
+        let dec = hex::decode(xored).unwrap();
+        let xored_b = std::str::from_utf8(&amp;dec);
+
+        match xored_b {
+            Ok(string) =&gt; {
+                obf = string.to_string();
+                println!(&quot;{} {:?}&quot;, ts, string);
+				break;
+            }
+            Err(_) =&gt; {}
+        }
+    }
+
+    let mess = &amp;obf[10..37];
+    let fin = change(mess.to_string());
+    obf.replace_range(10..37, &amp;fin);
+    println!(&quot;{}&quot;, obf);
+    Ok(())
+}
+</code></pre>

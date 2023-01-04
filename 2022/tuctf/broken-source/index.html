@@ -1,0 +1,21 @@
+<p>Download the wasm file and run <code>strings</code>.</p>
+<pre><code class="language-sh">strings my_project.wasm
+</code></pre>
+<p>Notice <code>.\new_project_for_ctf_v28095.cpp</code>. The file <code>/wasm/new_project_for_ctf_v28095.cpp</code> has the flag in plaintext:</p>
+<pre><code class="language-c">// ...
+
+__attribute__((noinline))
+EMSCRIPTEN_KEEPALIVE char* get_flag( )
+{
+    /* Wow, epic compiler bug! */
+    char flag[64] = &quot;TUCTF{my_c0mp1l3r_0p71m1z35_m3_0u7!}&quot;;
+
+   return flag;
+}
+
+int main()
+{
+    printf(&quot;Flag: %s\n&quot;, get_flag());
+    return 0;
+}
+</code></pre>

