@@ -1,0 +1,12 @@
+{% extends "base.njk" %} {% block main %}
+<header>
+	<nav>
+		<b>RiceSec</b>
+	</nav>
+</header>
+
+<h1>{{ page.fileSlug }}</h1>
+
+{{ content | safe }}
+
+{% endblock %}

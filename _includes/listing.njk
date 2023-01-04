@@ -1,0 +1,15 @@
+{% extends "base.njk" %} {% block main %}
+
+<h1>
+	<a href="/writeups{{ page.url }}">{{ page.fileSlug }}</a>
+</h1>
+
+<ul>
+	{% for pg in collections.all %} {% if page.url in pg.url and page.url !=
+	pg.url and (pg.url | depth) - (page.url | depth) == 1 %}
+	<li>
+		<a href="/writeups{{ pg.url }}">{{ pg.fileSlug }}</a>
+	</li>
+	{% endif %} {% endfor %}
+</ul>
+{% endblock %}

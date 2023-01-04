@@ -1,0 +1,16 @@
+---
+layout: base.njk
+---
+
+<h1>
+	<a href="/writeups{{ page.url }}">RiceSec writeups</a>
+</h1>
+
+<ul>
+	{% for pg in collections.all %} {% if page.url in pg.url and page.url !=
+	pg.url and (pg.url | depth) - (page.url | depth) <= 2 %}
+	<li>
+		<a href="/writeups{{ pg.url }}">/writeups{{ pg.url }}</a>
+	</li>
+	{% endif %} {% endfor %}
+</ul>
