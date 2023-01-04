@@ -1,3 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>RiceSec</title>
+
+	<link rel="stylesheet" href="/writeups/css/style.css" />
+</head>
+
+
+	<body>
+		
+<header>
+	<nav>
+		<b>RiceSec</b>
+	</nav>
+</header>
+
+<h1>word-wide-web</h1>
+
 <p>This challenge has a chain of links. Every page has one valid link among several broken ones (without <code>href</code> attributes). We can write a script to traverse through the chain.</p>
 <p>Additionally, the pages require that you include a cookie that describes the path along the solution until that page, lest, else it just says &quot;Booooo!&quot;.</p>
 <pre><code class="language-js">import jsdom from 'jsdom';
@@ -24,3 +45,8 @@ while (true) {
 }
 </code></pre>
 <p>The script errors out when <code>link</code> is <code>null</code>, at which point we can just manually check the last-link for the flag.</p>
+
+
+
+	</body>
+</html>

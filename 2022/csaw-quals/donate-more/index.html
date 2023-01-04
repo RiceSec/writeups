@@ -1,3 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>RiceSec</title>
+
+	<link rel="stylesheet" href="/writeups/css/style.css" />
+</head>
+
+
+	<body>
+		
+<header>
+	<nav>
+		<b>RiceSec</b>
+	</nav>
+</header>
+
+<h1>donate-more</h1>
+
 <p>This challenge was about <a href="https://solidity-by-example.org/hacks/re-entrancy/">re-entrancy</a>. In <code>donateOnce</code>, the call to <code>msg.sender.call</code> is made before <code>doneDonating[msg.sender]</code> is set to <code>true</code>. If we call <code>donation.donateOnce()</code> in our <code>receive</code> hook, we can &quot;enter&quot; the <code>donateOnce</code> body multiple times without being blocked by the if-statement. The later calls execute before the first one has a chance to complete.</p>
 <pre><code class="language-js">// SPDX-License-Identifier: MIT
 
@@ -38,3 +59,8 @@ contract CSAWDonate {
 }
 </code></pre>
 <p>After constructing <a href="https://ropsten.etherscan.io/address/0xC00d696718ae9dF26F61385570ACcd2737A8a57a">our contract</a> with the address of their <code>CSAWDonation</code> contract, we call <code>main</code>. This brings our balance to 30, preparing us to call <code>getFlag</code>. <a href="https://ropsten.etherscan.io/tx/0x85d0e11f8ac9784712f95f16023c72c69be9aa8c2f50e24a24c2d7bd91b1b342">Calling</a> our pass-through <code>getFlag</code> with the token number from the challenge server gets us the flag.</p>
+
+
+
+	</body>
+</html>

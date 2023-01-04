@@ -1,0 +1,52 @@
+* {
+	font-family: 'Courier New', Courier, monospace;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-size: inherit;
+}
+
+h1:before {
+	content: '# ';
+}
+
+h2:before {
+	content: '## ';
+}
+
+h3:before {
+	content: '### ';
+}
+
+h4:before {
+	content: '#### ';
+}
+
+body {
+	max-width: 80ch;
+	margin: 3rem;
+	line-height: 1.4;
+}
+
+nav {
+	margin-bottom: 2rem;
+}
+
+pre,
+code {
+	background-color: #f0f0f0;
+}
+
+pre {
+	padding: 1rem;
+	overflow-x: scroll;
+}
+
+code {
+	padding: 0 3px;
+}

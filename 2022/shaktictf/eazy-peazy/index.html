@@ -1,3 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>RiceSec</title>
+
+	<link rel="stylesheet" href="/writeups/css/style.css" />
+</head>
+
+
+	<body>
+		
+<header>
+	<nav>
+		<b>RiceSec</b>
+	</nav>
+</header>
+
+<h1>eazy-peazy</h1>
+
 <pre><code class="language-py">import base64
 s=''
 enc = base64.b64decode(b'ZFlSXGVaVGVXbFRjamFlIVAiZFBkZmEkY1BWUmtqampqampQWFQlJCNlYyYnWCVlYyYlbg==')
@@ -5,3 +26,8 @@ for i in enc:
     s+=chr(i+15)
 print(s)
 </code></pre>
+
+
+
+	</body>
+</html>

@@ -1,3 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>RiceSec</title>
+
+	<link rel="stylesheet" href="/writeups/css/style.css" />
+</head>
+
+
+	<body>
+		
+<header>
+	<nav>
+		<b>RiceSec</b>
+	</nav>
+</header>
+
+<h1>file-collapse</h1>
+
 <p>First, I found the AES key with <code>findaes</code>. Then I used the following script to try different initial values until one started with TUCTF.</p>
 <pre><code class="language-py">from Crypto.Cipher import AES
 
@@ -15,3 +36,8 @@ for addr in range(0, len(mem)):
   if b'TUCTF' in res:
     print(hex(addr2), res)
 </code></pre>
+
+
+
+	</body>
+</html>

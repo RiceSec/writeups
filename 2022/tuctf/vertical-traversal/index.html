@@ -1,3 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>RiceSec</title>
+
+	<link rel="stylesheet" href="/writeups/css/style.css" />
+</head>
+
+
+	<body>
+		
+<header>
+	<nav>
+		<b>RiceSec</b>
+	</nav>
+</header>
+
+<h1>vertical-traversal</h1>
+
 <p>The flag can be found at <code>https://vertical-traversal.tuctf.com/get/...%2fflag.txt</code></p>
 <p>The site is clearly using regular expressions to block access to any paths containing a <code>/</code>, but <code>%2f</code> unescapes to the same thing and is not detected.</p>
 <p><code>..</code> is also replaced with <code>.</code>, so using <code>...</code> causes the first <code>..</code> to be replaced with <code>.</code>, leaving us with <code>..</code>.</p>
+
+
+
+	</body>
+</html>
