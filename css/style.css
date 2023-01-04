@@ -37,16 +37,16 @@ nav {
 	margin-bottom: 2rem;
 }
 
-pre,
-code {
-	background-color: #f0f0f0;
-}
-
 pre {
 	padding: 1rem;
 	overflow-x: scroll;
 }
 
 code {
+	background-color: #f0f0f0;
 	padding: 0 3px;
+}
+
+pre code {
+	background-color: inherit;
 }

@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "@11ty/eleventy-plugin-syntaxhighlight": "^4.2.0"
+  }
+}

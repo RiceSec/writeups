@@ -1,6 +1,6 @@
 The creation time of `flag.txt` in the challenge zip file was `1669826638`.
 
-```rs
+```rust
 use rand::rngs::StdRng;
 use rand::{Rng, SeedableRng};
 use std::time::SystemTime;
