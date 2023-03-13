@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>RiceSec</title>
+
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/writeups/css/style.css" />
+</head>
+
+
+	<body>
+		
+<header>
+	<nav>
+		<b>RiceSec</b>
+	</nav>
+</header>
+
+<h1>looks-correct-to-me</h1>
+
+<pre class="language-py"><code class="language-py"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span><br><br>wip <span class="token operator">=</span> <span class="token string">b'utflag{'</span><br><br><span class="token keyword">while</span> <span class="token boolean">True</span><span class="token punctuation">:</span><br>	<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'wip'</span><span class="token punctuation">,</span> wip<span class="token punctuation">)</span><br>	<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">48</span><span class="token punctuation">,</span> <span class="token number">127</span><span class="token punctuation">)</span><span class="token punctuation">:</span><br>		p <span class="token operator">=</span> process<span class="token punctuation">(</span><span class="token string">'./check'</span><span class="token punctuation">)</span><br>		p<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><br>		p<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span>wip <span class="token operator">+</span> <span class="token builtin">chr</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">.</span>encode<span class="token punctuation">(</span><span class="token string">'utf-8'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><br>		res <span class="token operator">=</span> p<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span>timeout<span class="token operator">=</span><span class="token number">3</span><span class="token punctuation">)</span><br>		<span class="token keyword">if</span> res <span class="token operator">==</span> <span class="token boolean">None</span> <span class="token keyword">or</span> res <span class="token operator">==</span> <span class="token string">b''</span><span class="token punctuation">:</span> <span class="token comment"># we found a prefix of the flag</span><br>			wip <span class="token operator">+=</span> <span class="token builtin">chr</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">.</span>encode<span class="token punctuation">(</span><span class="token string">'utf-8'</span><span class="token punctuation">)</span><br>			<span class="token keyword">print</span><span class="token punctuation">(</span>wip<span class="token punctuation">)</span><br>			<span class="token keyword">break</span></code></pre>
+<p>The script would crash after finding every few characters, but I got around that by adjusting the starting guess and re-running it.</p>
+
+
+
+	</body>
+</html>

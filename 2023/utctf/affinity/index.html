@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>RiceSec</title>
+
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/writeups/css/style.css" />
+</head>
+
+
+	<body>
+		
+<header>
+	<nav>
+		<b>RiceSec</b>
+	</nav>
+</header>
+
+<h1>affinity</h1>
+
+<p>Thanks to <a href="https://crypto.stackexchange.com/questions/67612/aes-oracle-with-bad-s-box#67614">this answer by Ella Rose</a> to <em>AES oracle with bad S-box</em> on Crypto.SE.</p>
+<pre class="language-py"><code class="language-py"><span class="token keyword">from</span> aes <span class="token keyword">import</span> AES<br><br>aes <span class="token operator">=</span> AES<span class="token punctuation">(</span><span class="token punctuation">)</span><br><br>equiv_key <span class="token operator">=</span> <span class="token builtin">bytes</span><span class="token punctuation">.</span>fromhex<span class="token punctuation">(</span><span class="token string">'66687bf50272306355dd4d40ec454490'</span><span class="token punctuation">)</span><br>ciphertext <span class="token operator">=</span> <span class="token builtin">bytes</span><span class="token punctuation">.</span>fromhex<span class="token punctuation">(</span><span class="token string">'3384f87f781c394b79e331510540a4125a371b057b058d8e793521cd43f2ae94'</span><span class="token punctuation">)</span><br><br>ppt_1 <span class="token operator">=</span> <span class="token punctuation">[</span>equiv_key<span class="token punctuation">[</span>i <span class="token operator">%</span> <span class="token number">16</span><span class="token punctuation">]</span> <span class="token operator">^</span> ciphertext<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">]</span><br>ppt_2 <span class="token operator">=</span> <span class="token punctuation">[</span>equiv_key<span class="token punctuation">[</span>i <span class="token operator">%</span> <span class="token number">16</span><span class="token punctuation">]</span> <span class="token operator">^</span> ciphertext<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">,</span> <span class="token number">32</span><span class="token punctuation">)</span><span class="token punctuation">]</span><br><br>aes<span class="token punctuation">.</span>addRoundKey <span class="token operator">=</span> <span class="token keyword">lambda</span> state<span class="token punctuation">,</span> __<span class="token punctuation">:</span> state<br><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">bytes</span><span class="token punctuation">(</span>aes<span class="token punctuation">.</span>decrypt<span class="token punctuation">(</span>ppt_1<span class="token punctuation">,</span> <span class="token string">b'\x00'</span> <span class="token operator">*</span> <span class="token number">16</span><span class="token punctuation">,</span> <span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">bytes</span><span class="token punctuation">(</span>aes<span class="token punctuation">.</span>decrypt<span class="token punctuation">(</span>ppt_2<span class="token punctuation">,</span> <span class="token string">b'\x00'</span> <span class="token operator">*</span> <span class="token number">16</span><span class="token punctuation">,</span> <span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
+
+
+
+	</body>
+</html>

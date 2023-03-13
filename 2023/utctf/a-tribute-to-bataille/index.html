@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>RiceSec</title>
+
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/writeups/css/style.css" />
+</head>
+
+
+	<body>
+		
+<header>
+	<nav>
+		<b>RiceSec</b>
+	</nav>
+</header>
+
+<h1>a-tribute-to-bataille</h1>
+
+<p>The server would reject confessions about 90% of the time, but we can just send the same request until it goes through.</p>
+<p>Based on the URL of the image of the cross on the webpage (<code>/images/img2.png</code>), I figured there may be a <code>/images/img1.png</code>:</p>
+<p><img src="/writeups/2023/utctf/media/img1.png" alt=""></p>
+<p>The following confession dumps the contents of the <code>confessions</code> table, which includes the flag.</p>
+<pre><code>a&quot;); select * from confessions; --
+</code></pre>
+<pre><code>thanks for confessing[(&quot;I actually don't like security&quot;,), ('utflag{thanks_for_confessing_your_sins}',), [...]
+</code></pre>
+
+
+
+	</body>
+</html>
