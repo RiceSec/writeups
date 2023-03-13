@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>RiceSec</title>
+
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/writeups/css/style.css" />
+</head>
+
+
+	<body>
+		
+<header>
+	<nav>
+		<b>RiceSec</b>
+	</nav>
+</header>
+
+<h1>easy-volatility</h1>
+
+<p>After adding the provided ISF file to the correct folder in the Volatility3 installation,
+you can extract the bash history from the core dump with <code>vol.py -f debian11.core linux.bash.Bash</code>.</p>
+<p>This gives:</p>
+<pre><code>PID     Process CommandTime     Command
+
+467     bash    2023-03-05 18:21:23.000000      # 08ffea76-b232-4768-a815-3cc1c467e813
+</code></pre>
+<p>and <code>08ffea76-b232-4768-a815-3cc1c467e813</code> is the flag.</p>
+
+
+
+	</body>
+</html>
