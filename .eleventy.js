@@ -4,6 +4,7 @@ module.exports = (conf) => {
 	conf.addPassthroughCopy({
 		css: '/css',
 	});
+	conf.addPassthroughCopy('**/media/*')
 
 	conf.addPlugin(syntaxHighlight);
 
