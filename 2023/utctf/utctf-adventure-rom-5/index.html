@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>RiceSec</title>
+
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/writeups/css/style.css" />
+</head>
+
+
+	<body>
+		
+<header>
+	<nav>
+		<b>RiceSec</b>
+	</nav>
+</header>
+
+<h1>utctf-adventure-rom-5</h1>
+
+<p>I ran the game.gb file on the BGB GameBoy Emulator.</p>
+<p>The game is a maze that allows the user avatar to fall through a left or a right channel a total 10 times before displaying the end of game screens.
+If you fall through the channels in incorrect ordering, you lose the game.</p>
+<p>To find the way through the maze, I looked for patterns that would indicate the order in the debugging console.<br>
+<img src="https://cdn.discordapp.com/attachments/1083903400166563900/1084162573471060129/gba.png" alt="code"></p>
+<p>There are 10 lines with the suffix &quot;joypad&quot;. If &quot;a&quot; is before &quot;(ff00 + 00)&quot;, go through the right channel; otherwise go through the left. That
+would take you to the end of game screen with the flag.</p>
+<p><img src="https://cdn.discordapp.com/attachments/1083903400166563900/1084155460678058085/Screenshot_2023-03-11_104628.png" alt="eog"></p>
+
+
+
+	</body>
+</html>
