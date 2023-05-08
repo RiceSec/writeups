@@ -1,4 +1,4 @@
-```asm
+```
 main:
    PUSH %BP
    MOV  %SP, %BP
