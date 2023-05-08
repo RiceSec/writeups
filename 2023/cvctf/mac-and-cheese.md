@@ -30,7 +30,7 @@ int main() {
 		v4 += v2 % 0x539;
 	}
 
-	printf("cvctf{%u}\n", v4);
+	printf("cvctf %u\n", v4);
 	return 0;
 }
 ```
@@ -41,5 +41,5 @@ int main() {
 962373895
 2086543432
 1447638929
-cvctf{4666}
+cvctf 4666
 ```
