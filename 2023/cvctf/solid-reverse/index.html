@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>RiceSec</title>
+
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/writeups/css/style.css" />
+</head>
+
+
+	<body>
+		
+<header>
+	<nav>
+		<b>RiceSec</b>
+	</nav>
+</header>
+
+<h1>solid-reverse</h1>
+
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">magic1</span><span class="token punctuation">(</span><span class="token parameter">uint x<span class="token punctuation">,</span> uint n</span><span class="token punctuation">)</span> <span class="token keyword">public</span> pure <span class="token function">returns</span> <span class="token punctuation">(</span><span class="token parameter">uint</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><br>    <span class="token comment">// Something magic</span><br>    uint m <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">&lt;&lt;</span> n<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span><br>    <span class="token keyword">return</span> x <span class="token operator">&amp;</span> m<span class="token punctuation">;</span><br><span class="token punctuation">}</span></code></pre>
+<p><code>magic1(uint x, uint n)</code> gives us the <code>n</code> least significant bits of <code>x</code>.</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">magic2</span><span class="token punctuation">(</span><span class="token parameter">uint x</span><span class="token punctuation">)</span> <span class="token keyword">public</span> pure <span class="token function">returns</span> <span class="token punctuation">(</span><span class="token parameter">uint</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><br>    <span class="token comment">// Something else magic</span><br>    uint i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span><br>    <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>x <span class="token operator">>>=</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><br>        i <span class="token operator">+=</span> <span class="token number">1</span><span class="token punctuation">;</span><br>    <span class="token punctuation">}</span><br>    <span class="token keyword">return</span> i<span class="token punctuation">;</span><br><span class="token punctuation">}</span></code></pre>
+<p><code>magic2(uint x)</code> gives us the &quot;inverse&quot; of 'count leading zeroes' (I'm not sure what you would call this function).</p>
+<p>The assertions in the <code>checker</code> function uniquely specify the flag. We can verify our steps by adding a test function to the contract and running it in the <a href="https://remix.ethereum.org/">Remix</a> IDE, but I'll skip that here.</p>
+<pre class="language-js"><code class="language-js">modifier <span class="token function">checker</span><span class="token punctuation">(</span><span class="token parameter">bytes16 key</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><br>    <span class="token function">require</span><span class="token punctuation">(</span><span class="token function">bytes8</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0x3492800100670155</span><span class="token punctuation">,</span> <span class="token string">"Wrong key!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>    <span class="token function">require</span><span class="token punctuation">(</span><span class="token function">uint64</span><span class="token punctuation">(</span><span class="token function">uint128</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token function">uint32</span><span class="token punctuation">(</span><span class="token function">uint128</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"Wrong key!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>    <span class="token function">require</span><span class="token punctuation">(</span><span class="token function">magic1</span><span class="token punctuation">(</span><span class="token function">uint128</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">16</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0x1964</span><span class="token punctuation">,</span> <span class="token string">"Wrong key!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>    <span class="token function">require</span><span class="token punctuation">(</span><span class="token function">magic2</span><span class="token punctuation">(</span><span class="token function">uint64</span><span class="token punctuation">(</span><span class="token function">uint128</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">16</span><span class="token punctuation">,</span> <span class="token string">"Wrong key!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>    _<span class="token punctuation">;</span><br><span class="token punctuation">}</span></code></pre>
+<p>The first assertion tells us the first 8 bytes of the 16-byte key.</p>
+<pre><code>key = 0x3492800100670155????????????????
+</code></pre>
+<p>The second assertion tells us that the 64 least significant bits and the 32 least significant bits represent the same number. This gives away some zero bytes.</p>
+<pre><code>key = 0x349280010067015500000000????????
+</code></pre>
+<p>The third assertion gives away the two least significant bytes.</p>
+<pre><code>key = 0x349280010067015500000000????1964
+</code></pre>
+<p>Finally, the fourth assertion tells us there must be 16 &quot;useful&quot; bits in the 64 least significant bits, which is only possible if:</p>
+<pre><code>key = 0x34928001006701550000000000011964
+</code></pre>
+<p>Now, getting the flag is a matter of xor'ing the key and <code>goal</code>.</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">getflag</span><span class="token punctuation">(</span><span class="token parameter">bytes16 key</span><span class="token punctuation">)</span> <span class="token keyword">public</span> view <span class="token function">returns</span> <span class="token punctuation">(</span><span class="token parameter">bytes16</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><br>    <span class="token keyword">return</span> <span class="token function">bytes16</span><span class="token punctuation">(</span><span class="token function">uint128</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token function">uint128</span><span class="token punctuation">(</span>goal<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><span class="token punctuation">}</span></code></pre>
+<p>Running that with our <code>key</code> in Remix gives <code>flag = 0x63766374667b73304c31645f7844447d</code>, which we can confirm is the correct solution through the <code>unlock</code> function.</p>
+<p>Finally, converting the (big-endian) integer representation to bytes:</p>
+<pre class="language-py"><code class="language-py">In <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">:</span> <span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span><br><br>In <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">:</span> pack<span class="token punctuation">(</span><span class="token number">0x63766374667b73304c31645f7844447d</span><span class="token punctuation">,</span> <span class="token string">'all'</span><span class="token punctuation">,</span> endian<span class="token operator">=</span><span class="token string">'big'</span><span class="token punctuation">)</span><br>Out<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">:</span> <span class="token string">b'cvctf{s0L1d_xDD}'</span></code></pre>
+
+
+
+	</body>
+</html>

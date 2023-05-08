@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>RiceSec</title>
+
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/writeups/css/style.css" />
+</head>
+
+
+	<body>
+		
+<header>
+	<nav>
+		<b>RiceSec</b>
+	</nav>
+</header>
+
+<h1>baby-aes</h1>
+
+<p>Since the key (before padding) is just two bytes long, we can comfortably bruteforce it.</p>
+<pre class="language-py"><code class="language-py"><span class="token keyword">from</span> Crypto<span class="token punctuation">.</span>Cipher <span class="token keyword">import</span> AES<br><span class="token keyword">from</span> Crypto<span class="token punctuation">.</span>Util<span class="token punctuation">.</span>Padding <span class="token keyword">import</span> pad<br><br>KEY_LEN <span class="token operator">=</span> <span class="token number">2</span><br>BS <span class="token operator">=</span> <span class="token number">16</span><br><br>iv <span class="token operator">=</span> <span class="token builtin">bytes</span><span class="token punctuation">.</span>fromhex<span class="token punctuation">(</span><span class="token string">"1df49bc50bc2432bd336b4609f2104f7"</span><span class="token punctuation">)</span><br>ct <span class="token operator">=</span> <span class="token builtin">bytes</span><span class="token punctuation">.</span>fromhex<span class="token punctuation">(</span><span class="token string">"a40c6502436e3a21dd63c1553e4816967a75dfc0c7b90328f00af93f0094ed62"</span><span class="token punctuation">)</span><br><br><span class="token keyword">for</span> a <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">256</span><span class="token punctuation">)</span><span class="token punctuation">:</span><br>    <span class="token keyword">for</span> b <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">256</span><span class="token punctuation">)</span><span class="token punctuation">:</span><br>        key <span class="token operator">=</span> pad<span class="token punctuation">(</span><span class="token builtin">bytes</span><span class="token punctuation">(</span><span class="token punctuation">[</span>a<span class="token punctuation">,</span> b<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span> BS<span class="token punctuation">)</span><br>        pt <span class="token operator">=</span> AES<span class="token punctuation">.</span>new<span class="token punctuation">(</span>key<span class="token punctuation">,</span> AES<span class="token punctuation">.</span>MODE_CBC<span class="token punctuation">,</span> iv<span class="token punctuation">)</span><span class="token punctuation">.</span>decrypt<span class="token punctuation">(</span>ct<span class="token punctuation">)</span><br><br>        <span class="token keyword">if</span> <span class="token string">b"cvctf"</span> <span class="token keyword">in</span> pt<span class="token punctuation">:</span><br>            <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"key = </span><span class="token interpolation"><span class="token punctuation">{</span>key<span class="token punctuation">.</span><span class="token builtin">hex</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">}</span></span><span class="token string">"</span></span><span class="token punctuation">)</span><br>            <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"pt = </span><span class="token interpolation"><span class="token punctuation">{</span>pt<span class="token punctuation">}</span></span><span class="token string">"</span></span><span class="token punctuation">)</span><br>            <span class="token keyword">break</span></code></pre>
+
+
+
+	</body>
+</html>

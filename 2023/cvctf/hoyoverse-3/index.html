@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>RiceSec</title>
+
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/writeups/css/style.css" />
+</head>
+
+
+	<body>
+		
+<header>
+	<nav>
+		<b>RiceSec</b>
+	</nav>
+</header>
+
+<h1>hoyoverse-3</h1>
+
+<ul>
+<li>$R_1 a + R_2 b + R_3 c + d \mod p = X_1$</li>
+<li>$X_1 a + R_1 b + R_2 c + d \mod p = X_2$</li>
+<li>$X_2 a + X_1 b + R_1 c + d \mod p = X_3$</li>
+<li>$X_3 a + X_2 b + X_1 c + d \mod p = X_4$</li>
+<li>$X_4 a + X_3 b + X_2 c + d \mod p = X_5$</li>
+<li>$X_5 a + X_4 b + X_3 c + d \mod p = X_6$</li>
+<li>$X_6 a + X_5 b + X_4 c + d \mod p = X_7$</li>
+</ul>
+<p>$R_1$, $R_2$, and $R_3$ are unknown, but $X_1 \dots X_7$ are known. The modulus $p$ is also known.</p>
+<p>I'm sure there's a way to do this with sage, but it was easier to look for the Mathematica method.</p>
+<pre><code>In[2] := X1 = 14169084828739113416
+         X2 = 12950362233651727953
+         X3 = 13081576751296291893
+         X4 = 11189892724250189745
+         X5 = 2366046383900978737
+         X6 = 1749792629103627315
+         X7 = 8575562236709928474
+
+In[9] := Solve[{X3 a + X2 b + X1 c + d == X4, X4 a + X3 b + X2 c + d == X5,
+           X5 a + X4 b + X3 c + d == X6, X6 a + X5 b + X4 c + d == X7}, {a, b,
+           c, d}, Modulus -&gt; 16200480981168924301]
+Out[9] = { { d -&gt; 104965581386017, c -&gt; 57536211283509, b -&gt; 53289257628021,
+             a -&gt; 133249034578798 } }
+</code></pre>
+<pre class="language-py"><code class="language-py"><span class="token keyword">from</span> Crypto<span class="token punctuation">.</span>Util<span class="token punctuation">.</span>number <span class="token keyword">import</span> <span class="token operator">*</span><br><br>a <span class="token operator">=</span> <span class="token number">133249034578798</span><br>b <span class="token operator">=</span> <span class="token number">53289257628021</span><br>c <span class="token operator">=</span> <span class="token number">57536211283509</span><br>d <span class="token operator">=</span> <span class="token number">104965581386017</span><br><br><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">b''</span><span class="token punctuation">.</span>join<span class="token punctuation">(</span><span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">(</span>long_to_bytes<span class="token punctuation">,</span> <span class="token punctuation">[</span>a<span class="token punctuation">,</span> b<span class="token punctuation">,</span> c<span class="token punctuation">,</span> d<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
+<pre class="language-py"><code class="language-py"><span class="token string">b'y0u_kn0w_Equ4T1on5_w411!'</span></code></pre>
+
+
+
+	</body>
+</html>

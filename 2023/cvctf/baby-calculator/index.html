@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>RiceSec</title>
+
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/writeups/css/style.css" />
+</head>
+
+
+	<body>
+		
+<header>
+	<nav>
+		<b>RiceSec</b>
+	</nav>
+</header>
+
+<h1>baby-calculator</h1>
+
+<pre class="language-py"><code class="language-py"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span><br><span class="token keyword">from</span> sage<span class="token punctuation">.</span><span class="token builtin">all</span> <span class="token keyword">import</span> <span class="token operator">*</span><br><br>r <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">"20.169.252.240"</span><span class="token punctuation">,</span> <span class="token number">4200</span><span class="token punctuation">)</span><br>r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><br>r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><br><br>x <span class="token operator">=</span> var<span class="token punctuation">(</span><span class="token string">'x'</span><span class="token punctuation">)</span><br><br><span class="token keyword">while</span> <span class="token boolean">True</span><span class="token punctuation">:</span><br>    <span class="token keyword">print</span><span class="token punctuation">(</span>r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br>    r<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">b": "</span><span class="token punctuation">)</span><br><br>    inp <span class="token operator">=</span> r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>decode<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>strip<span class="token punctuation">(</span><span class="token punctuation">)</span><br>    expression<span class="token punctuation">,</span> bounds <span class="token operator">=</span> inp<span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">" from "</span><span class="token punctuation">)</span><br>    low<span class="token punctuation">,</span> high <span class="token operator">=</span> <span class="token builtin">map</span><span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">,</span> bounds<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token string">" to "</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><br>    answer <span class="token operator">=</span> n<span class="token punctuation">(</span>integrate<span class="token punctuation">(</span>expression<span class="token punctuation">,</span> x<span class="token punctuation">,</span> low<span class="token punctuation">,</span> high<span class="token punctuation">)</span><span class="token punctuation">)</span><br>    <span class="token keyword">print</span><span class="token punctuation">(</span>expression<span class="token punctuation">,</span> low<span class="token punctuation">,</span> high<span class="token punctuation">,</span> answer<span class="token punctuation">)</span><br><br>    r<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token builtin">str</span><span class="token punctuation">(</span>answer<span class="token punctuation">)</span><span class="token punctuation">.</span>encode<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><br>    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre>
+
+
+
+	</body>
+</html>

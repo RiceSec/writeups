@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>RiceSec</title>
+
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/writeups/css/style.css" />
+</head>
+
+
+	<body>
+		
+<header>
+	<nav>
+		<b>RiceSec</b>
+	</nav>
+</header>
+
+<h1>mac-and-cheese</h1>
+
+<p>I couldn't get the executable to run on my machine, so instead of dynamic analysis I just simulated the <code>sub_100003E10</code> function from IDA's decompilation output in a C file.</p>
+<pre class="language-c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdint.h></span></span><br><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span><br><br><span class="token keyword">int</span> dword_100008018 <span class="token operator">=</span> <span class="token number">0x20B5D4FF</span><span class="token punctuation">;</span><br><span class="token keyword">int</span> dword_10000801C <span class="token operator">=</span> <span class="token number">0x32378FC7</span><span class="token punctuation">;</span><br><span class="token keyword">int</span> dword_100008020 <span class="token operator">=</span> <span class="token number">0x0D55F8767</span><span class="token punctuation">;</span><br><span class="token keyword">int</span> dword_100008024 <span class="token operator">=</span> <span class="token number">0x104AA1AD</span><span class="token punctuation">;</span><br><br><span class="token class-name">int64_t</span> <span class="token function">sub_100003E10</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><br>	<span class="token keyword">unsigned</span> <span class="token keyword">int</span> v1 <span class="token operator">=</span> <span class="token punctuation">(</span>dword_100008018 <span class="token operator">&lt;&lt;</span> <span class="token number">11</span><span class="token punctuation">)</span> <span class="token operator">^</span> dword_100008018<span class="token punctuation">;</span><br>	dword_100008018 <span class="token operator">=</span> dword_10000801C<span class="token punctuation">;</span><br>	dword_10000801C <span class="token operator">=</span> dword_100008020<span class="token punctuation">;</span><br>	dword_100008020 <span class="token operator">=</span> dword_100008024<span class="token punctuation">;</span><br>	<span class="token class-name">int64_t</span> result <span class="token operator">=</span> <span class="token punctuation">(</span>v1 <span class="token operator">>></span> <span class="token number">8</span><span class="token punctuation">)</span> <span class="token operator">^</span> v1 <span class="token operator">^</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">unsigned</span> <span class="token keyword">int</span><span class="token punctuation">)</span>dword_100008024 <span class="token operator">>></span> <span class="token number">19</span><span class="token punctuation">)</span> <span class="token operator">^</span><br>					 dword_100008024<span class="token punctuation">;</span><br>	dword_100008024 <span class="token operator">^=</span> <span class="token punctuation">(</span>v1 <span class="token operator">>></span> <span class="token number">8</span><span class="token punctuation">)</span> <span class="token operator">^</span> v1 <span class="token operator">^</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">unsigned</span> <span class="token keyword">int</span><span class="token punctuation">)</span>dword_100008024 <span class="token operator">>></span> <span class="token number">19</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>	<span class="token keyword">return</span> result<span class="token punctuation">;</span><br><span class="token punctuation">}</span><br><br><span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><br>	<span class="token keyword">unsigned</span> <span class="token keyword">int</span> v2<span class="token punctuation">;</span><br>	<span class="token keyword">unsigned</span> <span class="token keyword">int</span> v4 <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span><br><br>	<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">5</span><span class="token punctuation">;</span> <span class="token operator">++</span>i<span class="token punctuation">)</span> <span class="token punctuation">{</span><br>		v2 <span class="token operator">=</span> <span class="token function">sub_100003E10</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>		<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%u\n"</span><span class="token punctuation">,</span> v2<span class="token punctuation">)</span><span class="token punctuation">;</span><br>		v4 <span class="token operator">+=</span> v2 <span class="token operator">%</span> <span class="token number">0x539</span><span class="token punctuation">;</span><br>	<span class="token punctuation">}</span><br><br>	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"cvctf %u\n"</span><span class="token punctuation">,</span> v4<span class="token punctuation">)</span><span class="token punctuation">;</span><br>	<span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span><br><span class="token punctuation">}</span></code></pre>
+<pre><code>2664865143
+269578461
+962373895
+2086543432
+1447638929
+cvctf 4666
+</code></pre>
+
+
+
+	</body>
+</html>

