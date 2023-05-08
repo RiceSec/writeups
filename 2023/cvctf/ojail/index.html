@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>RiceSec</title>
+
+	<link href="/writeups/css/prism-one-light.css" rel="stylesheet" />
+	<link rel="stylesheet" href="/writeups/css/style.css" />
+</head>
+
+
+	<body>
+		
+<header>
+	<nav>
+		<b>RiceSec</b>
+	</nav>
+</header>
+
+<h1>ojail</h1>
+
+<pre class="language-ocaml"><code class="language-ocaml"><span class="token punctuation">#</span> <span class="token keyword">let</span> files <span class="token operator">=</span> Sys<span class="token punctuation">.</span>readdir <span class="token string">"."</span> <span class="token keyword">in</span><br>  Array<span class="token punctuation">.</span>iter print_endline files<span class="token punctuation">;;</span><br>secret<br>Dockerfile<br>flag<span class="token punctuation">.</span>txt<br>build<span class="token punctuation">.</span>sh<br><span class="token operator">-</span> <span class="token punctuation">:</span> unit <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><br><span class="token punctuation">#</span> Sys<span class="token punctuation">.</span>command <span class="token string">"cat flag.txt"</span><span class="token punctuation">;;</span><br>The real flag is not here<span class="token operator">..</span><span class="token punctuation">.</span><span class="token operator">-</span> <span class="token punctuation">:</span> int <span class="token operator">=</span> <span class="token number">0</span><br><span class="token punctuation">#</span> Sys<span class="token punctuation">.</span>command <span class="token string">"ls -l"</span><span class="token punctuation">;;</span><br>total <span class="token number">20</span><br><span class="token operator">-</span>r<span class="token operator">-</span>xr<span class="token operator">-</span>xr<span class="token operator">-</span>x <span class="token number">1</span> root root  <span class="token number">260</span> Mar <span class="token number">26</span> <span class="token number">02</span><span class="token punctuation">:</span><span class="token number">04</span> Dockerfile<br><span class="token operator">-</span>r<span class="token operator">-</span>xr<span class="token operator">-</span>xr<span class="token operator">-</span>x <span class="token number">1</span> root root  <span class="token number">120</span> Mar <span class="token number">26</span> <span class="token number">02</span><span class="token punctuation">:</span><span class="token number">04</span> build<span class="token punctuation">.</span>sh<br><span class="token operator">-</span>r<span class="token operator">-</span>xr<span class="token operator">-</span>xr<span class="token operator">-</span>x <span class="token number">1</span> root root   <span class="token number">28</span> Mar <span class="token number">26</span> <span class="token number">02</span><span class="token punctuation">:</span><span class="token number">04</span> flag<span class="token punctuation">.</span>txt<br>dr<span class="token operator">-</span>xr<span class="token operator">-</span>xr<span class="token operator">-</span>x <span class="token number">1</span> root root <span class="token number">4096</span> Mar <span class="token number">26</span> <span class="token number">02</span><span class="token punctuation">:</span><span class="token number">34</span> secret<br><span class="token operator">-</span> <span class="token punctuation">:</span> int <span class="token operator">=</span> <span class="token number">0</span><br><span class="token punctuation">#</span> <span class="token keyword">let</span> files <span class="token operator">=</span> Sys<span class="token punctuation">.</span>readdir <span class="token string">"secret"</span> <span class="token keyword">in</span><br>  Array<span class="token punctuation">.</span>iter print_endline files<span class="token punctuation">;;</span><br>flag<span class="token operator">-</span>1d573e0faa99<span class="token punctuation">.</span>json<br><span class="token operator">-</span> <span class="token punctuation">:</span> unit <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><br><span class="token punctuation">#</span> Sys<span class="token punctuation">.</span>command <span class="token string">"cat secret/flag-1d573e0faa99.json"</span><span class="token punctuation">;;</span><br><span class="token punctuation">{</span><br>    <span class="token string">"message"</span><span class="token punctuation">:</span> <span class="token string">"Flag is here. OCaml syntax is easy, right?"</span><span class="token punctuation">,</span><br>    <span class="token string">"flag"</span><span class="token punctuation">:</span> <span class="token string">"cvctf{J41L3d_OOOO-C4mL@@}"</span><br><span class="token punctuation">}</span><span class="token operator">-</span> <span class="token punctuation">:</span> int <span class="token operator">=</span> <span class="token number">0</span><br></code></pre>
+
+
+
+	</body>
+</html>
